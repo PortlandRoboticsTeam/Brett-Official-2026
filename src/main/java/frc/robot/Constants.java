@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import java.security.PublicKey;
+
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.util.Units;
 import swervelib.math.Matter;
@@ -43,9 +45,16 @@ public final class Constants
   {
 
     // Joystick Deadband
-    public static final double DEADBAND        = 0.1;
-    public static final double LEFT_Y_DEADBAND = 0.1;
-    public static final double RIGHT_X_DEADBAND = 0.1;
-    public static final double TURN_CONSTANT    = 6;
+    public static final double 
+      DEADBAND         = 0.2,  
+      LEFT_Y_DEADBAND  = 0.15,  
+      RIGHT_X_DEADBAND = 0.1,  
+      TURN_CONSTANT    = 6;
+    
+    public static final boolean DEFAULT_IS_FIELD_ORIENTED = false;
+
+    public static final double 
+      LINEAR_CONTROL_APPROACH_RATE  = .1,
+      ANGULAR_CONTROL_APPROACH_RATE = .2;
   }
 }
