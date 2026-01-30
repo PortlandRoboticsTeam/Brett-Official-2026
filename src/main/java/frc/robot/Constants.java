@@ -4,8 +4,6 @@
 
 package frc.robot;
 
-import java.security.PublicKey;
-
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.util.Units;
 import swervelib.math.Matter;
@@ -54,7 +52,7 @@ public final class Constants
     public static final boolean DEFAULT_IS_FIELD_ORIENTED = false;
 
     public static final double 
-      LINEAR_CONTROL_APPROACH_RATE  = .1,
+      LINEAR_CONTROL_APPROACH_RATE  = .2,
       ANGULAR_CONTROL_APPROACH_RATE = .2;
   }
 }

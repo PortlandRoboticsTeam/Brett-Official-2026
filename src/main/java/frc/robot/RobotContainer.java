@@ -73,14 +73,6 @@ public class RobotContainer
 		.headingWhile(true)
 		.translationHeadingOffset(true)
 		.translationHeadingOffset(Rotation2d.fromDegrees(0));
-
-  SwerveInputStream driveStream = SwerveInputStream.of(drivebase.getSwerveDrive(),controller::getDriveY,controller::getDriveX)
-                                                            .withControllerRotationAxis(controller::getDriveR)
-                                                            // .deadband(OperatorConstants.DEADBAND) disabled because deadbands handled in Controller
-                                                            .scaleTranslation(0.8)
-                                                            .allianceRelativeControl(true);
-																														// .headingWhile(true);
-
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
@@ -121,13 +113,12 @@ public class RobotContainer
   {
     Command driveFieldOrientedAnglularVelocity = drivebase.driveFieldOriented(driveAngularVelocity);
     Command driveFieldOrientedDirectAngleKeyboard      = drivebase.driveFieldOriented(driveDirectAngleKeyboard);
-		Command driveCommand = drivebase.driveFieldOriented(driveStream);
 
     if (RobotBase.isSimulation())
     {
       drivebase.setDefaultCommand(driveFieldOrientedDirectAngleKeyboard);
     } else {
-      drivebase.setDefaultCommand(driveCommand);
+      drivebase.setDefaultCommand(drivebase.driveCommand(controller::getDriveY, controller::getDriveX, controller::getDriveR, false));
     }
 
     if (Robot.isSimulation())

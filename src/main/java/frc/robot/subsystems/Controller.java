@@ -31,8 +31,8 @@ public class Controller extends SubsystemBase{
 
 	@Override
 	public void periodic(){
-		double x=driver.getLeftX()*.4, y=driver.getLeftY()*.4, r=driver.getRightX();
-		double a=-yaw.getAsDouble(), db=OperatorConstants.DEADBAND;
+		double x=driver.getLeftX()*.7, y=driver.getLeftY()*.7, r=driver.getRightX();
+		double a=yaw.getAsDouble(), db=OperatorConstants.DEADBAND;
 
 		x = x>db ? x-db : x<-db ? x+db : 0;
 		y = y>db ? y-db : y<-db ? y+db : 0;
