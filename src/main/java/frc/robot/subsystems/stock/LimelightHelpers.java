@@ -1,6 +1,6 @@
 //LimelightHelpers v1.14 (REQUIRES LLOS 2026.0 OR LATER)
 
-package frc.robot.subsystems;
+package frc.robot.subsystems.stock;
 
 import edu.wpi.first.networktables.DoubleArrayEntry;
 import edu.wpi.first.networktables.NetworkTable;

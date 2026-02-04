@@ -22,9 +22,10 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
-import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import frc.robot.subsystems.Controller;
-import frc.robot.subsystems.LimelightHelpers;
+import frc.robot.subsystems.stock.LimelightHelpers;
+import frc.robot.subsystems.stock.SwerveSubsystem;
+
 import java.io.File;
 import swervelib.SwerveInputStream;
 
@@ -45,6 +46,7 @@ public class RobotContainer
   // Establish a Sendable Chooser that will be able to be sent to the SmartDashboard, allowing selection of desired auto
   private final SendableChooser<Command> autoChooser;
 
+  
   // Converts driver input into a field-relative ChassisSpeeds that is controlled by angular velocity.
   SwerveInputStream driveAngularVelocity = SwerveInputStream.of(drivebase.getSwerveDrive(),
                                                                 () -> controller.getDriveY(),
