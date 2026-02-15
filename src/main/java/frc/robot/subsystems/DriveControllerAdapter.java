@@ -2,12 +2,9 @@ package frc.robot.subsystems;
 
 import java.util.function.DoubleSupplier;
 
-import javax.sound.midi.ControllerEventListener;
-
 import frc.robot.Constants.OperatorConstants;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.wpilibj2.command.button.CommandPS5Controller;
 
 public class DriveControllerAdapter extends SubsystemBase{
 	

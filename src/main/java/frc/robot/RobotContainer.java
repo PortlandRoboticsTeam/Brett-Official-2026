@@ -6,12 +6,7 @@ package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
-import edu.wpi.first.math.controller.ProfiledPIDController;
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.RobotBase;
@@ -19,8 +14,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.subsystems.ControllerHandler;
 import frc.robot.subsystems.DriveControllerAdapter;
@@ -76,16 +69,13 @@ public class RobotContainer
 
 	public RobotContainer() {
 		// Configure the trigger bindings
-		configureDrivebaseBindings();
+		configureBindings();
 		driveAdapter.setVehicleYawSupplier(()->drivebase.getHeading().getRadians());
 		DriverStation.silenceJoystickConnectionWarning(true);
 		
-
 		//Create the NamedCommands that will be used in PathPlanner
 		NamedCommands.registerCommand("Placeholder Command", Commands.print(" <!> Placeholder Command Triggered"));
 		NamedCommands.registerCommand("Placeholder Command II", Commands.print(" <!> Placeholder Command II Triggered"));
-
-		
 
 		//Have the autoChooser pull in all PathPlanner autos as options
 		autoChooser = AutoBuilder.buildAutoChooser();
@@ -94,30 +84,19 @@ public class RobotContainer
 		
 		//Put the autoChooser on the SmartDashboard
 		SmartDashboard.putData("Auto Chooser", autoChooser);
-
 	}
 
-	/**
-	 * Use this method to define your trigger->command mappings. Triggers can be created via the
-	 * {@link Trigger#Trigger(java.util.function.BooleanSupplier)} constructor with an arbitrary predicate, or via the
-	 * named factories in {@link edu.wpi.first.wpilibj2.command.button.CommandGenericHID}'s subclasses for
-	 * {@link edu.wpi.first.wpilibj2.command.button.CommandPS4Controller PS4}
-	 * controllers or {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight joysticks}.
-	 */
-	private void configureDrivebaseBindings()
-	{
-		Command driveFieldOrientedAnglularVelocity = drivebase.driveFieldOriented(driveAngularVelocity);
-		Command driveFieldOrientedDirectAngleKeyboard      = drivebase.driveFieldOriented(driveDirectAngleKeyboard);
+	private void configureBindings() {
+		// Command driveFieldOrientedAnglularVelocity    = drivebase.driveFieldOriented(driveAngularVelocity);
+		Command driveFieldOrientedDirectAngleKeyboard = drivebase.driveFieldOriented(driveDirectAngleKeyboard);
 
 		if (RobotBase.isSimulation())
-		{
 			drivebase.setDefaultCommand(driveFieldOrientedDirectAngleKeyboard);
-		} else {
+		else
 			drivebase.setDefaultCommand(drivebase.driveCommand(driveAdapter::getDriveY, driveAdapter::getDriveX, driveAdapter::getDriveR, false));
-		}
 
-		if (Robot.isSimulation())
-		{
+		/* Old Command Bindings (Obsolete and commented out)
+		if (Robot.isSimulation()) {
 			Pose2d target = new Pose2d(new Translation2d(1, 4),
 																 Rotation2d.fromDegrees(90));
 			//drivebase.getSwerveDrive().field.getObject("targetPose").setPose(target);
@@ -132,34 +111,45 @@ public class RobotContainer
 			control.d_triangle().whileTrue(drivebase.sysIdDriveMotorCommand());
 			control.d_circle().whileTrue(Commands.runEnd(() -> driveDirectAngleKeyboard.driveToPoseEnabled(true),
 																										 () -> driveDirectAngleKeyboard.driveToPoseEnabled(false)));
-
-//      driverXbox.b().whileTrue(
-//          drivebase.driveToPose(
-//              new Pose2d(new Translation2d(4, 4), Rotation2d.fromDegrees(0)))
-//                              );
-
 		}
+
+//  drivebase.driveToPose(new Pose2d(new Translation2d(4, 4), Rotation2d.fromDegrees(0));
+
 		if (DriverStation.isTest())
 		{
 			drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocity); // Overrides drive command above!
 
 			control.d_square().whileTrue(Commands.runOnce(drivebase::lock, drivebase).repeatedly());
-			control.d_button(10).onTrue((Commands.runOnce(drivebase::zeroGyro))); // menu
-			control.d_button(9).whileTrue(drivebase.centerModulesCommand()); // wiper fluid
+			control.d_menu().onTrue((Commands.runOnce(drivebase::zeroGyro))); // menu
+			control.d_blink().whileTrue(drivebase.centerModulesCommand()); // wiper fluid
 			control.d_L2().onTrue(Commands.none());
 			control.d_R2().onTrue(Commands.none());
 		} else
 		{
 			control.d_cross().onTrue((Commands.runOnce(drivebase::zeroGyro)));
 			control.d_square().onTrue(Commands.runOnce(drivebase::addFakeVisionReading));
-			control.d_button(10).whileTrue(Commands.none()); // menu
-			control.d_button(9).whileTrue(Commands.none()); // wiper fluid
+			control.d_menu().whileTrue(Commands.none());
+			control.d_blink().whileTrue(Commands.none());
 			control.d_L2().whileTrue(Commands.runOnce(drivebase::lock, drivebase).repeatedly());
 			control.d_R2().onTrue(Commands.none());
 		}
+		*/
 
-		control.d_button(11).onTrue(new InstantCommand(()->driveAdapter.toggleFieldOriented()));
+		control.d_R1().onTrue 												(Commands.runOnce(()->driveAdapter.setFieldOriented(true)));
+		control.d_R1().onFalse												(Commands.runOnce(()->driveAdapter.setFieldOriented(false)));
+		control.d_LSB().and(control.d_RSB()).onTrue		(Commands.runOnce(drivebase::lock));
+		control.d_square().onTrue											(Commands.runOnce(drivebase::zeroGyro));
+		control.d_triangle().whileTrue								(Commands.run(()->{})); // TODO Auto-Aim
+		
+		control.h_povUp().onTrue											(Commands.run(()->{})); // TODO Open & Activate Intake
+		control.h_povLeft().onTrue										(Commands.run(()->{})); // TODO Open & Disable Intake
+		control.h_povDown().onTrue										(Commands.run(()->{})); // TODO Close & Disable Intake
+		control.h_povRight().onTrue										(Commands.run(()->{})); // TODO Pulse Intake (as adjetator)
+		control.h_L2().onTrue													(Commands.run(()->{})); // TODO Extend Climber
+		control.h_L2().onFalse												(Commands.run(()->{})); // TODO Retract Climber
 
+		control.h_R2().onTrue													(Commands.run(()->{})); // TODO Fire
+		control.h_R2().onFalse												(Commands.run(()->{})); // TODO Stop Firing
 	}
 
 	/**
