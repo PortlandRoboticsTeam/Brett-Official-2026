@@ -22,7 +22,7 @@ public class DriveControllerAdapter extends SubsystemBase{
 		ctrl=c;
 	}
 
-	public void setYawSupplier(DoubleSupplier newYawSupplier){ yaw = newYawSupplier; }
+	public void setVehicleYawSupplier(DoubleSupplier newYawSupplier){ yaw = newYawSupplier; }
 
 	public boolean    setFieldOriented (boolean newval) { isFieldOriented = newval; return isFieldOriented;}
 	public boolean    getFieldOriented ( ) { return isFieldOriented;}

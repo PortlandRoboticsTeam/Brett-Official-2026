@@ -44,7 +44,6 @@ public class RobotContainer
 	// Establish a Sendable Chooser that will be able to be sent to the SmartDashboard, allowing selection of desired auto
 	private final SendableChooser<Command> autoChooser;
 
-	
 	// Converts driver input into a field-relative ChassisSpeeds that is controlled by angular velocity.
 	SwerveInputStream driveAngularVelocity = SwerveInputStream.of(drivebase.getSwerveDrive(),
 																																() -> driveAdapter.getDriveY(),
@@ -75,11 +74,10 @@ public class RobotContainer
 		.translationHeadingOffset(true)
 		.translationHeadingOffset(Rotation2d.fromDegrees(0));
 
-		public RobotContainer()
-	{
+	public RobotContainer() {
 		// Configure the trigger bindings
-		configureBindings();
-		driveAdapter.setYawSupplier(()->drivebase.getHeading().getRadians());
+		configureDrivebaseBindings();
+		driveAdapter.setVehicleYawSupplier(()->drivebase.getHeading().getRadians());
 		DriverStation.silenceJoystickConnectionWarning(true);
 		
 
@@ -106,7 +104,7 @@ public class RobotContainer
 	 * {@link edu.wpi.first.wpilibj2.command.button.CommandPS4Controller PS4}
 	 * controllers or {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight joysticks}.
 	 */
-	private void configureBindings()
+	private void configureDrivebaseBindings()
 	{
 		Command driveFieldOrientedAnglularVelocity = drivebase.driveFieldOriented(driveAngularVelocity);
 		Command driveFieldOrientedDirectAngleKeyboard      = drivebase.driveFieldOriented(driveDirectAngleKeyboard);
