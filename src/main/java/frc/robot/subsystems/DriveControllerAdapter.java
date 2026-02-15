@@ -1,23 +1,25 @@
 package frc.robot.subsystems;
 
 import java.util.function.DoubleSupplier;
+
+import javax.sound.midi.ControllerEventListener;
+
 import frc.robot.Constants.OperatorConstants;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.CommandPS5Controller;
 
-public class Controller extends SubsystemBase{
+public class DriveControllerAdapter extends SubsystemBase{
 	
 	double intx = 0, inty = 0, intr = 0;
 
-	final CommandPS5Controller driver, helper;
+	final ControllerHandler ctrl;
 	DoubleSupplier yaw = () -> 0;
 	boolean isFieldOriented = OperatorConstants.DEFAULT_IS_FIELD_ORIENTED;
 
-	public Controller(int driverPort, int helperPort){
+	public DriveControllerAdapter(ControllerHandler c){
 		super();
-		driver = new CommandPS5Controller(driverPort);
-		helper = new CommandPS5Controller(helperPort);
+		ctrl=c;
 	}
 
 	public void setYawSupplier(DoubleSupplier newYawSupplier){ yaw = newYawSupplier; }
@@ -26,12 +28,9 @@ public class Controller extends SubsystemBase{
 	public boolean    getFieldOriented ( ) { return isFieldOriented;}
 	public boolean toggleFieldOriented ( ) { isFieldOriented = !isFieldOriented; return isFieldOriented;}
 
-	public CommandPS5Controller driver(){return driver;}
-	public CommandPS5Controller helper(){return helper;}
-
 	@Override
 	public void periodic(){
-		double x=driver.getLeftX()*.7, y=driver.getLeftY()*.7, r=driver.getRightX();
+		double x=ctrl.d_leftX()*.7, y=ctrl.d_leftY()*.7, r=ctrl.d_rightX();
 		double a=yaw.getAsDouble(), db=OperatorConstants.DEADBAND;
 
 		x = x>db ? x-db : x<-db ? x+db : 0;
