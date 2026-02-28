@@ -162,6 +162,11 @@ public class Intake extends SubsystemBase {
         );
     }
 
+    /**
+     * When the command starts, the pivot is moved to the INTAKE position and the
+     * roller motor is set to the INTAKE speed. The command continues running until
+     * it is interrupted or ends.
+     */
     public Command intakeCommand() {
         return startEnd(
             () -> {
@@ -172,6 +177,14 @@ public class Intake extends SubsystemBase {
         );
     }
 
+    /**
+     * The command begins by setting the roller motor to the INTAKE speed. It then
+     * continuously cycles the pivot between the AGITATE and INTAKE positions. After
+     * each movement, the command waits until the pivot reaches the target position
+     * within tolerance before continuing. This sequence repeats indefinitely until
+     * the command is interrupted. When the command is interrupted, the pivot is
+     * returned to the INTAKE position and the roller motor is stopped.
+     */
     public Command agitateCommand() {
         return runOnce(() -> set(Speed.INTAKE))
             .andThen(
@@ -188,7 +201,18 @@ public class Intake extends SubsystemBase {
                 set(Speed.STOP);
             });
     }
-
+    
+    /**
+     * The pivot motor is driven slowly forward until the supply current exceeds
+     * a threshold, indicating that the mechanism has reached its mechanical home stop.
+     * Once this occurs, the pivot encoder position is reset to the HOMED angle, the
+     * subsystem is marked as homed, and the pivot is moved to the STOWED position.
+     * This command will not run if the mechanism has already been homed.
+     *
+     * The command uses {@link InterruptionBehavior#kCancelIncoming}, meaning that
+     * if another command attempts to interrupt it, the incoming command will be canceled
+     * and this command will continue running.
+     */
     public Command homingCommand() {
         return Commands.sequence(
             runOnce(() -> setPivotPercentOutput(0.1)),
@@ -202,7 +226,23 @@ public class Intake extends SubsystemBase {
         .unless(() -> isHomed)
         .withInterruptBehavior(InterruptionBehavior.kCancelIncoming);
     }
-
+    /*
+     * Initializes the sendable properties for this subsystem to display on the dashboard.
+     * 
+     * <pre>
+     * +----------------------------------+
+     * |        IntakeSubsystem           |
+     * +----------------------------------+
+     * | Command:              IntakeIn   |
+     * |                                  |
+     * | Angle (degrees):      42.5°      |
+     * | RPM:                  1800       |
+     * |                                  |
+     * | Pivot Supply Current:  6.3 A     |
+     * | Roller Supply Current: 4.9 A     |    
+     * +----------------------------------+
+     * </pre>
+     */
     @Override
     public void initSendable(SendableBuilder builder) {
         builder.addStringProperty("Command", () -> getCurrentCommand() != null ? getCurrentCommand().getName() : "null", null);

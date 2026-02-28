@@ -108,11 +108,35 @@ public class Hanger extends SubsystemBase {
         );
     }
 
+    /**
+     * Used with the Hanger.Position values to determine the position of the 
+     * hangers.
+     */
     public Command positionCommand(Position position) {
         return runOnce(() -> set(position))
             .andThen(Commands.waitUntil(this::isExtensionWithinTolerance));
     }
 
+    /**
+     This command is intended to be used during robot initialization or when the
+    * mechanism’s encoder position is unknown. It performs the following steps:</p>
+    *
+    * <ol>
+    *   <li>Drives the motor slowly backward at -5% output to approach the mechanical stop.</li>
+    *   <li>Waits until the motor current exceeds 0.4 Amps, indicating that the mechanism
+    *       has reached its physical home.</li>
+    *   <li>Sets the motor encoder position to the predefined <code>HOMED</code> angle.</li>
+    *   <li>Marks the mechanism as homed by setting <code>isHomed = true</code>.</li>
+    *   <li>Moves the mechanism to the <code>EXTEND_HOPPER</code> position as a default starting pose.</li>
+    * </ol>
+    *
+    * <p>The command will be skipped if <code>isHomed</code> is already true, preventing
+    * unnecessary movement. It also uses the <code>kCancelIncoming</code> interruption
+    * behavior to ensure the homing routine completes safely if another command tries
+    * to interrupt it.</p>
+    *
+    * @return a command that homes the mechanism and moves it to the default position
+    */
     public Command homingCommand() {
         return Commands.sequence(
             runOnce(() -> setPercentOutput(-0.05)),
@@ -142,6 +166,19 @@ public class Hanger extends SubsystemBase {
         return Inches.of(extensionMeasure.in(Inches)); // Promote from Measure<DistanceUnit> to Distance
     }
 
+    /**
+     * Initializes the sendable properties for this subsystem to display on the dashboard.
+     *
+     * <pre>
+     * +----------------------------+
+     * |       SubsystemName        |
+     * +----------------------------+
+     * | Command:           null    |
+     * | Extension (inches): 12.5  |
+     * | Supply Current:     3.2 A |
+     * +----------------------------+
+     * </pre>
+     */
     @Override
     public void initSendable(SendableBuilder builder) {
         builder.addStringProperty("Command", () -> getCurrentCommand() != null ? getCurrentCommand().getName() : "null", null);
