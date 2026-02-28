@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.CommandPS5Controller;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.Constants.OperatorConstants;
 
 public class ControllerHandler extends SubsystemBase {
 
@@ -20,7 +21,7 @@ public class ControllerHandler extends SubsystemBase {
 
 	private final CommandPS5Controller dcc, hcc; // driver, helper
 	private final int swapButton;
-	private boolean d_swap=false, h_swap=false, one_handed=false;
+	private boolean d_swap=false, h_swap=false, one_handed=OperatorConstants.DEFAULT_ONE_HANDED;
 	public ControllerHandler(int swapButtonID, int driverPort, int helperPort){
 		super();
 		swapButton = swapButtonID;

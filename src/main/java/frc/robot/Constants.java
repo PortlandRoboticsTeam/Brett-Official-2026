@@ -58,6 +58,7 @@ public final class Constants
 			TURN_CONSTANT    = 6;
 		
 		public static final boolean DEFAULT_IS_FIELD_ORIENTED = false;
+		public static final boolean DEFAULT_ONE_HANDED = true;
 
 		public static final double 
 			LINEAR_CONTROL_APPROACH_RATE  = .2,
@@ -67,20 +68,20 @@ public final class Constants
 	public final class Ports {
 		// CAN Buses
 		public static final CANBus kRoboRioCANBus = new CANBus("rio");
-		public static final CANBus kCANivoreCANBus = new CANBus("main");
+		public static final CANBus kCANivoreCANBus = new CANBus("rio");
 
 		// Talon FX IDs
-		public static final int kIntakePivot 		= 10 + 10;
-		public static final int kIntakeRollers 	= 11 + 10;
-		public static final int kFloor 					= 12 + 10;
-		public static final int kFeeder 				= 13 + 10;
-		public static final int kShooterLeft 		= 14 + 10;
-		public static final int kShooterMiddle 	= 15 + 10;
-		public static final int kShooterRight 	= 16 + 10;
-		public static final int kHanger 				= 18 + 10;
+		public static final int kShooterLeft 	= 31;
+		public static final int kShooterMiddle 	= 32;
+		public static final int kShooterRight 	= 33;
+		public static final int kFloor 			= 34;
+		public static final int kFeeder 		= 35;
+		public static final int kIntakePivot 	= 36;
+		public static final int kIntakeRollers 	= 37;
+		public static final int kHanger 		= 38;
 
 		// PWM Ports
-		public static final int kHoodLeftServo 	= 3;
-		public static final int kHoodRightServo = 4;
+		public static final int kHoodLeftServo 	= 8;
+		public static final int kHoodRightServo = 9;
 	}
 }

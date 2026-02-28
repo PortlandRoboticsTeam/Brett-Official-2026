@@ -18,6 +18,11 @@ GitHub: https://github.com/wcpllc/2026CompetitiveConcept
 ## Control Guide
 Slides: https://docs.google.com/presentation/d/1Df-ZnbTBpNsHdl3szxJ4QNOpd_V1Ua5YG6Antzs98B0/edit?slide=id.g3bec3249f21_0_50#slide=id.g3bec3249f21_0_50
 
+# PWM IDs: 
+
+8. Left Hood Actuator
+9. Right Hood Actuator
+
 # Can IDs: 
 
 ### Drive Control
@@ -35,14 +40,14 @@ Slides: https://docs.google.com/presentation/d/1Df-ZnbTBpNsHdl3szxJ4QNOpd_V1Ua5Y
 12. CTRE	CANcoder	Forward Left Steering Encoder
 
 ### Fuel Handling
-20.	___		_______		Intake Pivot
-21.	___		_______		Intake Rollers
-22.	___		_______		Floor
-23.	___		_______		Feeder
-24.	___		_______		Left Shooter Flywheel
-25.	___		_______		Middle Shooter Flywheel
-26.	___		_______		Right Shooter Flywheel
-28.	___		_______		Hanger
+31.	CTRE	Kracken		Left Shooter Flywheel
+32.	CTRE	Kracken		Middle Shooter Flywheel
+33.	CTRE	Kracken		Right Shooter Flywheel
+34.	CTRE	Kracken		Agitator Belts
+35.	CTRE	Kracken		Elevator Wheels
+36.	CTRE	Kracken		Intake Actuator
+37.	CTRE	Kracken		Intake Roller Bars
+38.	CTRE	Kracken		Climber Spool
 
 ### Top-Level Hardware
 60. REV		PDP			Central Power Distribution

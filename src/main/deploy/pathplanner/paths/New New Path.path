@@ -3,35 +3,47 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.4292530120481926,
-        "y": 3.78366265060241
+        "x": 3.024698795180723,
+        "y": 3.9694337349397593
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.855433734939759,
-        "y": 3.78366265060241
+        "x": 3.1995421686746988,
+        "y": 4.69066265060241
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 3.11212048192771,
-        "y": 3.78366265060241
+        "x": 4.4999397590361445,
+        "y": 5.663228915662651
       },
       "prevControl": {
-        "x": 2.5875903614457822,
-        "y": 3.7727349397590357
+        "x": 3.8333493975903608,
+        "y": 5.761578313253012
       },
       "nextControl": null,
       "isLocked": false,
       "linkedName": null
     }
   ],
-  "rotationTargets": [],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.5,
+      "rotationDegrees": 50.001633563835945
+    }
+  ],
   "constraintZones": [],
   "pointTowardsZones": [],
-  "eventMarkers": [],
+  "eventMarkers": [
+    {
+      "name": "go over ramp",
+      "waypointRelativePos": 0,
+      "endWaypointRelativePos": null,
+      "command": null
+    }
+  ],
   "globalConstraints": {
     "maxVelocity": 3.0,
     "maxAcceleration": 3.0,
@@ -42,13 +54,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 1.591140271194607
+    "rotation": 0.0
   },
   "reversed": false,
   "folder": null,
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -1.6135389328812015
+    "rotation": 0.0
   },
-  "useDefaultConstraints": false
+  "useDefaultConstraints": true
 }
