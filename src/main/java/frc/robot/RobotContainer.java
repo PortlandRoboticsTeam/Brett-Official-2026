@@ -45,44 +45,44 @@ public class RobotContainer{
 	// Converts driver input into a field-relative ChassisSpeeds that is controlled
 	// by angular velocity.
 	SwerveInputStream driveAngularVelocity = SwerveInputStream.of(drivebase.getSwerveDrive(),
-			() -> driveAdapter.getDriveY(),
-			() -> driveAdapter.getDriveX())
-			.withControllerRotationAxis(control::d_rightX)
-			.deadband(OperatorConstants.DEADBAND)
-			.scaleTranslation(0.8)
-			.allianceRelativeControl(true);
+																																() -> driveAdapter.getDriveY(),
+																																() -> driveAdapter.getDriveX())
+																														.withControllerRotationAxis(control::d_rightX)
+																														.deadband(OperatorConstants.DEADBAND)
+																														.scaleTranslation(0.8)
+																														.allianceRelativeControl(true);
 
 	/**
 	 * Clone's the angular velocity input stream and converts it to a robotRelative
 	 * input stream.
 	 */
 	SwerveInputStream driveRobotOriented = driveAngularVelocity.copy().robotRelative(true)
-			.allianceRelativeControl(false);
+																														 .allianceRelativeControl(false);
 
 	SwerveInputStream driveAngularVelocityKeyboard = SwerveInputStream.of(drivebase.getSwerveDrive(),
-			() -> -control.d_leftY(),
-			() -> -control.d_leftX())
-			.withControllerRotationAxis(() -> control.d_rightX())
-			.deadband(OperatorConstants.DEADBAND)
-			.scaleTranslation(0.8)
-			.allianceRelativeControl(true);
+																																				() -> -control.d_leftY(),
+																																				() -> -control.d_leftX())
+																																		.withControllerRotationAxis(() -> control.d_rightX())
+																																		.deadband(OperatorConstants.DEADBAND)
+																																		.scaleTranslation(0.8)
+																																		.allianceRelativeControl(true);
 
 	// Derive the heading axis with math!
-	SwerveInputStream driveDirectAngleKeyboard = driveAngularVelocityKeyboard.copy()
-			.withControllerHeadingAxis(() -> Math.sin(control.d_getAxis(2) * Math.PI) * (Math.PI * 2),
-					() -> Math.cos(control.d_getAxis(2) * Math.PI) * (Math.PI * 2))
-			.headingWhile(true)
-			.translationHeadingOffset(true)
-			.translationHeadingOffset(Rotation2d.fromDegrees(0));
+	SwerveInputStream driveDirectAngleKeyboard     = driveAngularVelocityKeyboard.copy()
+		.withControllerHeadingAxis(() -> Math.sin(control.d_getAxis(2) * Math.PI) * (Math.PI * 2),
+															 () -> Math.cos(control.d_getAxis(2) * Math.PI) * (Math.PI * 2))
+		.headingWhile(true)
+		.translationHeadingOffset(true)
+		.translationHeadingOffset(Rotation2d.fromDegrees(0));
 
 	Command Auto_Aim_Start	= new InstantCommand(()->{}); // TODO Auto-Aim
 	Command Auto_Aim_Stop	= new InstantCommand(()->{}); // TODO Auto-Aim
-	Command Intake_Open		= mIntake.intakeCommand(); // TODO Open & Activate Intake
-	Command Intake_Halt		= mIntake.idle(); // TODO Open & Disable Intake
-	Command Intake_Close	= mIntake.homingCommand(); // TODO Close & Disable Intake
-	Command Intake_Pulse	= mIntake.agitateCommand(); // TODO Pulse Intake (as adjetator)
-	Command Climber_Up		= new InstantCommand(()->{}); // TODO Extend Climber
-	Command Climber_Down	= new InstantCommand(()->{}); // TODO Retract Climber
+	Command Intake_Open		= mIntake.intakeCommand();
+	Command Intake_Halt		= mIntake.idle();
+	Command Intake_Close	= mIntake.homingCommand();
+	Command Intake_Pulse	= mIntake.agitateCommand();
+	Command Climber_Up		= mHanger.positionCommand(Hanger.Position.HANGING);
+	Command Climber_Down	= mHanger.homingCommand();
 	Command Fire			= mShooter.spinUpCommand(3500).andThen(mFloor.feedCommand().alongWith(mFeeder.feedCommand())); // Fire
 	Command Stop_Firing		= mShooter.spinUpCommand(0).alongWith(mFloor.idle()).alongWith(mFeeder.idle()); // Stop Firing
 	
@@ -182,9 +182,6 @@ public class RobotContainer{
 
 		control.h_R2().onTrue							(Fire        ); // Fire
 		control.h_R2().onFalse							(Stop_Firing ); // Stop Firing
-
-		// control.povUp().onTrue(mHanger.positionCommand(Hanger.Position.HANGING));
-        // control.povDown().onTrue(mHanger.positionCommand(Hanger.Position.HUNG));
 	}
 
 	/**

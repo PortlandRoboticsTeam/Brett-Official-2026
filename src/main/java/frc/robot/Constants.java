@@ -71,17 +71,20 @@ public final class Constants
 		public static final CANBus kCANivoreCANBus = new CANBus("rio");
 
 		// Talon FX IDs
-		public static final int kShooterLeft 	= 31;
-		public static final int kShooterMiddle 	= 32;
-		public static final int kShooterRight 	= 33;
-		public static final int kFloor 			= 34;
-		public static final int kFeeder 		= 35;
-		public static final int kIntakePivot 	= 36;
-		public static final int kIntakeRollers 	= 37;
-		public static final int kHanger 		= 38;
+		public static final int kShooterLeft 	= 13;
+		public static final int kShooterMiddle 	= 14;
+		public static final int kShooterRight 	= 15;
+		
+		public static final int kFloor 			= 20;
+		public static final int kFeeder 		= 21;
+		public static final int kIntakePivot 	= 22;
+		public static final int kIntakeRollers 	= 23;
+		public static final int kHanger 		= 24;
 
 		// PWM Ports
 		public static final int kHoodLeftServo 	= 8;
 		public static final int kHoodRightServo = 9;
+
+		public static final int kIntakeLimitSwitch = 0;
 	}
 }

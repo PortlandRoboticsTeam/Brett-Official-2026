@@ -24,6 +24,7 @@ import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.util.sendable.SendableBuilder;
+import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Command.InterruptionBehavior;
@@ -33,6 +34,11 @@ import frc.robot.Constants.KrakenX60;
 import frc.robot.Constants.Ports;
 
 public class Intake extends SubsystemBase {
+    
+    private double offset = 0; // custom
+    private boolean zeroing = true; // custom
+    AnalogInput limitSwitch = new AnalogInput(Ports.kIntakeLimitSwitch);
+    
     public enum Speed {
         STOP(0),
         INTAKE(0.8);
@@ -149,17 +155,29 @@ public class Intake extends SubsystemBase {
     }
 
     public void set(Position position) {
-        pivotMotor.setControl(
-            pivotMotionMagicRequest
-                .withPosition(position.angle())
-        );
+        if(!zeroing) // custom
+            pivotMotor.setControl(
+                pivotMotionMagicRequest
+                    .withPosition(withOffset(position))
+            );
+        else
+            pivotMotor.setControl(
+                pivotMotionMagicRequest
+                    .withPosition(withOffset(Position.HOMED))
+            );
     }
 
     public void set(Speed speed) {
-        rollerMotor.setControl(
-            rollerVoltageRequest
-                .withOutput(speed.voltage())
-        );
+        if(!zeroing) // custom
+            rollerMotor.setControl(
+                rollerVoltageRequest
+                    .withOutput(speed.voltage())
+            );
+        else
+            rollerMotor.setControl(
+                rollerVoltageRequest
+                    .withOutput(Speed.STOP.voltage())
+            );
     }
 
     /**
@@ -213,7 +231,7 @@ public class Intake extends SubsystemBase {
      * if another command attempts to interrupt it, the incoming command will be canceled
      * and this command will continue running.
      */
-    public Command homingCommand() {
+     public Command homingCommand() {
         return Commands.sequence(
             runOnce(() -> setPivotPercentOutput(0.1)),
             Commands.waitUntil(() -> pivotMotor.getSupplyCurrent().getValue().in(Amps) > 6),
@@ -226,6 +244,30 @@ public class Intake extends SubsystemBase {
         .unless(() -> isHomed)
         .withInterruptBehavior(InterruptionBehavior.kCancelIncoming);
     }
+    
+    /**
+     *  Custom Methods Made By DiOrio
+     */
+    private Angle withOffset(Position pos){
+        return Angle.ofBaseUnits(pos.angle().in(Degrees)-offset,Degrees);
+    }
+    public Command calibrateCommand() { return runOnce(()->beginCalibrating()); }
+    public void beginCalibrating(){ zeroing=true; offset+=90; }
+
+    @Override
+    public void periodic(){
+        if(zeroing){
+            SmartDashboard.putNumber("Limit Voltage", limitSwitch.getVoltage());
+            if(zeroing && limitSwitch.getVoltage()<.1){
+                zeroing=false;
+                homingCommand().execute();
+            }else{
+                offset--;
+                homingCommand().execute();
+            }
+        }
+    }
+
     /*
      * Initializes the sendable properties for this subsystem to display on the dashboard.
      * 

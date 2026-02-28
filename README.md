@@ -40,16 +40,16 @@ Slides: https://docs.google.com/presentation/d/1Df-ZnbTBpNsHdl3szxJ4QNOpd_V1Ua5Y
 12. CTRE	CANcoder	Forward Left Steering Encoder
 
 ### Fuel Handling
-31.	CTRE	Kracken		Left Shooter Flywheel
-32.	CTRE	Kracken		Middle Shooter Flywheel
-33.	CTRE	Kracken		Right Shooter Flywheel
-34.	CTRE	Kracken		Agitator Belts
-35.	CTRE	Kracken		Elevator Wheels
-36.	CTRE	Kracken		Intake Actuator
-37.	CTRE	Kracken		Intake Roller Bars
-38.	CTRE	Kracken		Climber Spool
+13.	CTRE	Kracken		Left Shooter Flywheel
+14.	CTRE	Kracken		Middle Shooter Flywheel
+15.	CTRE	Kracken		Right Shooter Flywheel
+20.	CTRE	Kracken		Agitator Belts
+21.	CTRE	Kracken		Elevator Wheels
+22.	CTRE	Kracken		Intake Actuator
+23.	CTRE	Kracken		Intake Roller Bars
+24.	CTRE	Kracken		Climber Spool
 
 ### Top-Level Hardware
-60. REV		PDP			Central Power Distribution
-61.	CTRE	CANdle		CANdle (Phoenix 5)
-62.	CTRE	Pigeon 2	Central IMU
+37. REV		PDP			Central Power Distribution
+38.	CTRE	CANdle		CANdle (Phoenix 5)
+39.	CTRE	Pigeon 2	Central IMU
