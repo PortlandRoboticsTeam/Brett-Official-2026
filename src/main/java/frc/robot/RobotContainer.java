@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.subsystems.ControllerHandler;
 import frc.robot.subsystems.DriveControllerAdapter;
+import frc.robot.subsystems.LemonLime;
 import frc.robot.subsystems.stock.SwerveSubsystem;
 import frc.robot.subsystems.wcp.*;
 
@@ -35,7 +36,8 @@ public class RobotContainer{
 	private final Hanger	mHanger		 = new Hanger();
 	private final Hood		mHood		 = new Hood();
 	private final Intake	mIntake		 = new Intake();
-	private final Limelight	mLimelight	 = new Limelight("Primary");
+	private final Limelight	mLimelight	 = new Limelight("limelight");
+	private final LemonLime mLemonLime   = new LemonLime(drivebase);
 	private final Shooter	mShooter	 = new Shooter();
 
 	// Establish a Sendable Chooser that will be able to be sent to the
@@ -85,6 +87,8 @@ public class RobotContainer{
 	Command Climber_Down	= mHanger.homingCommand();
 	Command Fire			= mShooter.spinUpCommand(3500).andThen(mFloor.feedCommand().alongWith(mFeeder.feedCommand())); // Fire
 	Command Stop_Firing		= mShooter.spinUpCommand(0).alongWith(mFloor.idle()).alongWith(mFeeder.idle()); // Stop Firing
+	Command EnableVisionDriving = mLemonLime.enableVisionDriving();
+	Command DisableVisionDriving = mLemonLime.disableVisionDriving();
 	
 	public RobotContainer() {
 		// Configure the trigger bindings
