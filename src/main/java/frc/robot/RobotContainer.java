@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.subsystems.ControllerHandler;
 import frc.robot.subsystems.DriveControllerAdapter;
+import frc.robot.subsystems.LemonLime;
 import frc.robot.subsystems.stock.SwerveSubsystem;
 import frc.robot.subsystems.wcp.*;
 
@@ -35,7 +36,8 @@ public class RobotContainer{
 	private final Hanger	mHanger		 = new Hanger();
 	private final Hood		mHood		 = new Hood();
 	private final Intake	mIntake		 = new Intake();
-	private final Limelight	mLimelight	 = new Limelight("Primary");
+	private final Limelight	mLimelight	 = new Limelight("limelight");
+	private final LemonLime mLemonLime   = new LemonLime(drivebase);
 	private final Shooter	mShooter	 = new Shooter();
 
 	// Establish a Sendable Chooser that will be able to be sent to the
@@ -81,10 +83,12 @@ public class RobotContainer{
 	Command Intake_Halt		= mIntake.idle(); // TODO Open & Disable Intake
 	Command Intake_Close	= mIntake.homingCommand(); // TODO Close & Disable Intake
 	Command Intake_Pulse	= mIntake.agitateCommand(); // TODO Pulse Intake (as adjetator)
-	Command Climber_Up		= new InstantCommand(()->{}); // TODO Extend Climber
-	Command Climber_Down	= new InstantCommand(()->{}); // TODO Retract Climber
+	Command Climber_Up		= mHanger.positionCommand(Hanger.Position.HANGING); // Extend Climber
+	Command Climber_Down	= mHanger.positionCommand(Hanger.Position.HUNG); // Retract Climber
 	Command Fire			= mShooter.spinUpCommand(3500).andThen(mFloor.feedCommand().alongWith(mFeeder.feedCommand())); // Fire
 	Command Stop_Firing		= mShooter.spinUpCommand(0).alongWith(mFloor.idle()).alongWith(mFeeder.idle()); // Stop Firing
+	Command EnableVisionDriving = mLemonLime.enableVisionDriving();
+	Command DisableVisionDriving = mLemonLime.disableVisionDriving();
 	
 	public RobotContainer() {
 		// Configure the trigger bindings
@@ -182,9 +186,6 @@ public class RobotContainer{
 
 		control.h_R2().onTrue							(Fire        ); // Fire
 		control.h_R2().onFalse							(Stop_Firing ); // Stop Firing
-
-		// control.povUp().onTrue(mHanger.positionCommand(Hanger.Position.HANGING));
-        // control.povDown().onTrue(mHanger.positionCommand(Hanger.Position.HUNG));
 	}
 
 	/**
