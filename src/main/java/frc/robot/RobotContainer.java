@@ -87,8 +87,7 @@ public class RobotContainer{
 	Command Climber_Down	= mHanger.positionCommand(Hanger.Position.HUNG); // Retract Climber
 	Command Fire			= mShooter.spinUpCommand(3500).andThen(mFloor.feedCommand().alongWith(mFeeder.feedCommand())); // Fire
 	Command Stop_Firing		= mShooter.spinUpCommand(0).alongWith(mFloor.idle()).alongWith(mFeeder.idle()); // Stop Firing
-	Command EnableVisionDriving = mLemonLime.enableVisionDriving();
-	Command DisableVisionDriving = mLemonLime.disableVisionDriving();
+	Command ToggleVisionDriving = mLemonLime.toggleVisionDriving();
 	
 	public RobotContainer() {
 		// Configure the trigger bindings
@@ -110,6 +109,7 @@ public class RobotContainer{
 		NamedCommands.registerCommand("Begin Firing",Fire);
 		NamedCommands.registerCommand("Stop Firing",Stop_Firing);
 
+		NamedCommands.registerCommand("EnableVisionDriving", ToggleVisionDriving);
 
 		//Have the autoChooser pull in all PathPlanner autos as options
 		autoChooser = AutoBuilder.buildAutoChooser();
@@ -186,6 +186,8 @@ public class RobotContainer{
 
 		control.h_R2().onTrue							(Fire        ); // Fire
 		control.h_R2().onFalse							(Stop_Firing ); // Stop Firing
+
+		//control.??.onTrue(ToggleVisionDriving);
 	}
 
 	/**
