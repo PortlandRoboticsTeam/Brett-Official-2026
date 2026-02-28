@@ -14,12 +14,8 @@ public class LemonLime extends SubsystemBase {
         swerve = drivebase;
     }
 
-    public Command enableVisionDriving() {
-        return runOnce(() -> setEnabled(true));
-    }
-
-    public Command disableVisionDriving() {
-        return runOnce(() -> setEnabled(false));
+    public Command toggleVisionDriving() {
+        return runOnce(() -> setEnabled(!this.enabled));
     }
 
     public void setEnabled(boolean enable) {
