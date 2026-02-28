@@ -18,10 +18,10 @@ GitHub: https://github.com/wcpllc/2026CompetitiveConcept
 ## Control Guide
 Slides: https://docs.google.com/presentation/d/1Df-ZnbTBpNsHdl3szxJ4QNOpd_V1Ua5YG6Antzs98B0/edit?slide=id.g3bec3249f21_0_50#slide=id.g3bec3249f21_0_50
 
-# PWM IDs: 
-
-8. Left Hood Actuator
-9. Right Hood Actuator
+# Other IDs: 
+0. Analog In	Limit Switch	Intake Collapsed Limit Switch
+8. PWM			Linear Servo	Left Hood Actuator
+9. PWM			Linear Servo	Right Hood Actuator
 
 # Can IDs: 
 

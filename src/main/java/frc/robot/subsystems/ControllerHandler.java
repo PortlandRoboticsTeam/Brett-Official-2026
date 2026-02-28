@@ -1,5 +1,7 @@
 package frc.robot.subsystems;
 
+import java.util.function.BooleanSupplier;
+
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.CommandPS5Controller;
@@ -27,10 +29,10 @@ public class ControllerHandler extends SubsystemBase {
 		swapButton = swapButtonID;
 		dcc = new CommandPS5Controller(driverPort);
 		hcc = new CommandPS5Controller(helperPort);
-		dcc.button(swapButton).onTrue (runOnce(() -> { d_swap=true ; dcc.setRumble(RumbleType.kBothRumble, 0); }));
-		dcc.button(swapButton).onFalse(runOnce(() -> { d_swap=false; dcc.setRumble(RumbleType.kBothRumble, 0); }));
-		hcc.button(swapButton).onTrue (runOnce(() -> { h_swap=true ; dcc.setRumble(RumbleType.kBothRumble, 0); }));
-		hcc.button(swapButton).onFalse(runOnce(() -> { h_swap=false; dcc.setRumble(RumbleType.kBothRumble, 0); }));
+		dcc.button(swapButton).onTrue (runOnce(() -> { if(!one_handed){ d_swap=true ; dcc.setRumble(RumbleType.kBothRumble, 0); } }));
+		dcc.button(swapButton).onFalse(runOnce(() -> { if(!one_handed){ d_swap=false; dcc.setRumble(RumbleType.kBothRumble, 0); } }));
+		hcc.button(swapButton).onTrue (runOnce(() -> { if(!one_handed){ h_swap=true ; dcc.setRumble(RumbleType.kBothRumble, 0); } }));
+		hcc.button(swapButton).onFalse(runOnce(() -> { if(!one_handed){ h_swap=false; dcc.setRumble(RumbleType.kBothRumble, 0); } }));
 	}
 
 	public ControllerHandler(){this(5,0,1);}
@@ -39,38 +41,38 @@ public class ControllerHandler extends SubsystemBase {
 
 
 	public double d_getAxis(int axis) {
-		return h_swap ? hcc.getRawAxis(axis) : dcc.getRawAxis(axis);
+		return h_swap && !one_handed ? hcc.getRawAxis(axis) : dcc.getRawAxis(axis);
 	}
 	public double h_getAxis(int axis) {
-		return d_swap ? dcc.getRawAxis(axis) : hcc.getRawAxis(axis);
+		return d_swap ||  one_handed ? dcc.getRawAxis(axis) : hcc.getRawAxis(axis);
 	}
 
 	public Trigger d_button(int button_id){
 		if(button_id == swapButton){
 			throw new Error(" >>> Illegal Button Binding: Attempted to bind a control to button \""+button_id+"\" on driver controller when that button is reserved for the swap button.");
 		}
-		return dcc.button(swapButton).negate().and(dcc.button(button_id)).or(
-			hcc.button(swapButton).and(hcc.button(button_id)));
+		return  dcc.button(button_id).and(hcc.button(swapButton).negate().or(()->one_handed)).or(
+				hcc.button(button_id).and(dcc.button(swapButton)));
 	}
 	public Trigger h_button(int button_id){
 		if(button_id == swapButton){
 			throw new Error(" >>> Illegal Button Binding: Attempted to bind a control to button \""+button_id+"\" on helper controller when that button is reserved for the swap button.");
 		}
-		return hcc.button(swapButton).negate().and(hcc.button(button_id)).or(
-			dcc.button(swapButton).and(dcc.button(button_id).or(()->one_handed)));
+		return  hcc.button(button_id).and(hcc.button(swapButton).negate()).or(
+				dcc.button(button_id).and(dcc.button(swapButton).or(()->one_handed)));
 	}
 
 	public Trigger d_pov(int angle){
-		return dcc.button(swapButton).negate().and(dcc.pov(angle)).or(
-			hcc.button(swapButton).and(hcc.pov(angle)));
+		return  dcc.button(swapButton).negate().or(()->one_handed)	.and(dcc.pov(angle)).or(
+				hcc.button(swapButton)								.and(hcc.pov(angle)));
 	}
 	public Trigger h_pov(int angle){
-		return hcc.button(swapButton).negate().and(hcc.pov(angle)).or(
-			dcc.button(swapButton).and(dcc.pov(angle)));
+		return  hcc.button(swapButton).negate()				.and(hcc.pov(angle)).or(
+				dcc.button(swapButton).or(()->one_handed)	.and(dcc.pov(angle)));
 	}
 
 	public boolean driverConnected(){ return dcc.isConnected(); }
-	public boolean helperConnected(){ return hcc.isConnected(); }
+	public boolean helperConnected(){ return hcc.isConnected() || one_handed; }
 
 	public void driverRumble(RumbleType type, double value){ 
 		if(!d_swap) dcc.setRumble(type, value); 
