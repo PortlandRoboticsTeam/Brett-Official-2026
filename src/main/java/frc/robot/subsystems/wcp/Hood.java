@@ -49,7 +49,11 @@ public class Hood extends SubsystemBase {
         targetPosition = clampedPosition;
     }
 
-    /** Expects a position between 0.0 and 1.0 */
+    /**
+     * Used with the Hanger.Position.Value enum to determine 
+     *
+     * @param position the normalized target position (0.0 - 1.0)
+     */
     public Command positionCommand(double position) {
         return runOnce(() -> setPosition(position))
             .andThen(Commands.waitUntil(this::isPositionWithinTolerance));
@@ -81,6 +85,20 @@ public class Hood extends SubsystemBase {
         updateCurrentPosition();
     }
 
+
+    /**
+     * Initializes the sendable properties for this subsystem to display on the dashboard.
+     * 
+     * <pre>
+     * +----------------------------+
+     * |       SubsystemName        |
+     * +----------------------------+
+     * | Command:          null     |
+     * | Current Position: 42.5     |
+     * | Target Position:  50.0 [ ] |  <-- editable field
+     * +----------------------------+
+     * </pre>
+     */
     @Override
     public void initSendable(SendableBuilder builder) {
         builder.addStringProperty("Command", () -> getCurrentCommand() != null ? getCurrentCommand().getName() : "null", null);

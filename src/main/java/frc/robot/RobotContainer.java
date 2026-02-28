@@ -38,38 +38,42 @@ public class RobotContainer{
 	private final Limelight	mLimelight	 = new Limelight("Primary");
 	private final Shooter	mShooter	 = new Shooter();
 
-	// Establish a Sendable Chooser that will be able to be sent to the SmartDashboard, allowing selection of desired auto
+	// Establish a Sendable Chooser that will be able to be sent to the
+	// SmartDashboard, allowing selection of desired auto
 	private final SendableChooser<Command> autoChooser;
 
-	// Converts driver input into a field-relative ChassisSpeeds that is controlled by angular velocity.
+	// Converts driver input into a field-relative ChassisSpeeds that is controlled
+	// by angular velocity.
 	SwerveInputStream driveAngularVelocity = SwerveInputStream.of(drivebase.getSwerveDrive(),
-																																() -> driveAdapter.getDriveY(),
-																																() -> driveAdapter.getDriveX())
-																														.withControllerRotationAxis(control::d_rightX)
-																														.deadband(OperatorConstants.DEADBAND)
-																														.scaleTranslation(0.8)
-																														.allianceRelativeControl(true);
+			() -> driveAdapter.getDriveY(),
+			() -> driveAdapter.getDriveX())
+			.withControllerRotationAxis(control::d_rightX)
+			.deadband(OperatorConstants.DEADBAND)
+			.scaleTranslation(0.8)
+			.allianceRelativeControl(true);
 
 	/**
-	 * Clone's the angular velocity input stream and converts it to a robotRelative input stream.
+	 * Clone's the angular velocity input stream and converts it to a robotRelative
+	 * input stream.
 	 */
 	SwerveInputStream driveRobotOriented = driveAngularVelocity.copy().robotRelative(true)
-																														 .allianceRelativeControl(false);
+			.allianceRelativeControl(false);
 
 	SwerveInputStream driveAngularVelocityKeyboard = SwerveInputStream.of(drivebase.getSwerveDrive(),
-																																				() -> -control.d_leftY(),
-																																				() -> -control.d_leftX())
-																																		.withControllerRotationAxis(() -> control.d_rightX())
-																																		.deadband(OperatorConstants.DEADBAND)
-																																		.scaleTranslation(0.8)
-																																		.allianceRelativeControl(true);
+			() -> -control.d_leftY(),
+			() -> -control.d_leftX())
+			.withControllerRotationAxis(() -> control.d_rightX())
+			.deadband(OperatorConstants.DEADBAND)
+			.scaleTranslation(0.8)
+			.allianceRelativeControl(true);
+
 	// Derive the heading axis with math!
-	SwerveInputStream driveDirectAngleKeyboard     = driveAngularVelocityKeyboard.copy()
-		.withControllerHeadingAxis(() -> Math.sin(control.d_getAxis(2) * Math.PI) * (Math.PI * 2),
-															 () -> Math.cos(control.d_getAxis(2) * Math.PI) * (Math.PI * 2))
-		.headingWhile(true)
-		.translationHeadingOffset(true)
-		.translationHeadingOffset(Rotation2d.fromDegrees(0));
+	SwerveInputStream driveDirectAngleKeyboard = driveAngularVelocityKeyboard.copy()
+			.withControllerHeadingAxis(() -> Math.sin(control.d_getAxis(2) * Math.PI) * (Math.PI * 2),
+					() -> Math.cos(control.d_getAxis(2) * Math.PI) * (Math.PI * 2))
+			.headingWhile(true)
+			.translationHeadingOffset(true)
+			.translationHeadingOffset(Rotation2d.fromDegrees(0));
 
 	Command Auto_Aim_Start	= new InstantCommand(()->{}); // TODO Auto-Aim
 	Command Auto_Aim_Stop	= new InstantCommand(()->{}); // TODO Auto-Aim
@@ -81,6 +85,7 @@ public class RobotContainer{
 	Command Climber_Down	= new InstantCommand(()->{}); // TODO Retract Climber
 	Command Fire			= mShooter.spinUpCommand(3500).andThen(mFloor.feedCommand().alongWith(mFeeder.feedCommand())); // Fire
 	Command Stop_Firing		= mShooter.spinUpCommand(0).alongWith(mFloor.idle()).alongWith(mFeeder.idle()); // Stop Firing
+	
 	public RobotContainer() {
 		// Configure the trigger bindings
 		configureBindings();
@@ -177,6 +182,9 @@ public class RobotContainer{
 
 		control.h_R2().onTrue							(Fire        ); // Fire
 		control.h_R2().onFalse							(Stop_Firing ); // Stop Firing
+
+		// control.povUp().onTrue(mHanger.positionCommand(Hanger.Position.HANGING));
+        // control.povDown().onTrue(mHanger.positionCommand(Hanger.Position.HUNG));
 	}
 
 	/**
@@ -184,14 +192,13 @@ public class RobotContainer{
 	 *
 	 * @return the command to run in autonomous
 	 */
-	public Command getAutonomousCommand()
-	{
-		// Pass in the selected auto from the SmartDashboard as our desired autnomous commmand 
+	public Command getAutonomousCommand() {
+		// Pass in the selected auto from the SmartDashboard as our desired autnomous
+		// commmand
 		return autoChooser.getSelected();
 	}
 
-	public void setMotorBrake(boolean brake)
-	{
+	public void setMotorBrake(boolean brake) {
 		drivebase.setMotorBrake(brake);
 	}
 }

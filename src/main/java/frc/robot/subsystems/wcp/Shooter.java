@@ -101,6 +101,9 @@ public class Shooter extends SubsystemBase {
         setPercentOutput(0.0);
     }
 
+    /**
+     * Used to 
+     */
     public Command spinUpCommand(double rpm) {
         return runOnce(() -> setRPM(rpm))
             .andThen(Commands.waitUntil(this::isVelocityWithinTolerance));
@@ -119,12 +122,48 @@ public class Shooter extends SubsystemBase {
         });
     }
 
+    /**
+     * Register the 
+     * @param builder
+     * @param motor
+     * @param name
+     */
     private void initSendable(SendableBuilder builder, TalonFX motor, String name) {
         builder.addDoubleProperty(name + " RPM", () -> motor.getVelocity().getValue().in(RPM), null);
         builder.addDoubleProperty(name + " Stator Current", () -> motor.getStatorCurrent().getValue().in(Amps), null);
         builder.addDoubleProperty(name + " Supply Current", () -> motor.getSupplyCurrent().getValue().in(Amps), null);
     }
 
+
+    /**
+     * Initializes the sendable properties for this subsystem to display on the dashboard.
+     * 
+     * Note, the editable value will be overriden by the button configuration commands
+     * in the RobotContainer, so that has to be disabled if you want to use the dashboard
+     * for testing.
+     * 
+     * <pre>
+     * +--------------------------------------+
+     * |        ShooterSubsystem              |
+     * +--------------------------------------+
+     * | Left RPM:            4250            |
+     * | Left Stator Current: 12.4 A          |
+     * | Left Supply Current: 10.8 A          |
+     * |                                      |
+     * | Middle RPM:          4260            |
+     * | Middle Stator Current: 12.1 A        |
+     * | Middle Supply Current: 10.5 A        |
+     * |                                      |
+     * | Right RPM:           4245            |
+     * | Right Stator Current: 12.6 A         |
+     * | Right Supply Current: 11.0 A         |
+     * |                                      |
+     * | Command:             SpinUpShooter   |
+     * | Dashboard RPM:       [ 4500 ]  <-- editable field to request a new value
+     * | Target RPM:          4500      <-- what the code is currently trying to reach      
+     * +--------------------------------------+
+     * </pre>
+     */
     @Override
     public void initSendable(SendableBuilder builder) {
         initSendable(builder, leftMotor, "Left");
