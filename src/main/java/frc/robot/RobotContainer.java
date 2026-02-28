@@ -109,7 +109,6 @@ public class RobotContainer{
 		NamedCommands.registerCommand("Begin Firing",Fire);
 		NamedCommands.registerCommand("Stop Firing",Stop_Firing);
 
-		NamedCommands.registerCommand("EnableVisionDriving", ToggleVisionDriving);
 
 		//Have the autoChooser pull in all PathPlanner autos as options
 		autoChooser = AutoBuilder.buildAutoChooser();
@@ -186,9 +185,7 @@ public class RobotContainer{
 
 		control.h_R2().onTrue							(Fire        ); // Fire
 		control.h_R2().onFalse							(Stop_Firing ); // Stop Firing
-
-		//control.??.onTrue(ToggleVisionDriving);
-	}
+	} 
 
 	/**
 	 * Use this to pass the autonomous command to the main {@link Robot} class.

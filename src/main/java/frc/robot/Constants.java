@@ -70,6 +70,10 @@ public final class Constants
 		public static final CANBus kRoboRioCANBus = new CANBus("rio");
 		public static final CANBus kCANivoreCANBus = new CANBus("rio");
 
+		public static final int kPowerDistID 	= 37;
+		public static final int kCANdleID	 	= 38;
+		public static final int kPigeonIMU	 	= 39;
+
 		// Talon FX IDs
 		public static final int kShooterLeft 	= 13;
 		public static final int kShooterMiddle 	= 14;
