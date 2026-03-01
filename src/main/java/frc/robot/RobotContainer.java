@@ -80,9 +80,10 @@ public class RobotContainer{
 	Command Auto_Aim_Start	= new InstantCommand(()->{}); // TODO Auto-Aim
 	Command Auto_Aim_Stop	= new InstantCommand(()->{}); // TODO Auto-Aim
 	Command Intake_Open		= mIntake.intakeCommand();
-	Command Intake_Halt		= mIntake.idle();
-	Command Intake_Close	= mIntake.homingCommand();
+	Command Intake_Halt		= mIntake.haltCommand();
+	Command Intake_Close	= mIntake.closeCommand();
 	Command Intake_Pulse	= mIntake.agitateCommand();
+	Command Intake_Calibrate= mIntake.calibrateCommand();
 	Command Climber_Up		= mHanger.positionCommand(Hanger.Position.HANGING);
 	Command Climber_Down	= mHanger.homingCommand();
 	Command Fire			= mShooter.spinUpCommand(3500).andThen(mFloor.feedCommand().alongWith(mFeeder.feedCommand())); // Fire
@@ -104,6 +105,7 @@ public class RobotContainer{
 		NamedCommands.registerCommand("Open & Disable Intake",Intake_Halt);
 		NamedCommands.registerCommand("Close & Disable Intake",Intake_Close);
 		NamedCommands.registerCommand("Pulse Intake (as adjetator)",Intake_Pulse);
+		NamedCommands.registerCommand("Calibrate Intake",Intake_Calibrate);
 		NamedCommands.registerCommand("Extend Climber",Climber_Up);
 		NamedCommands.registerCommand("Retract Climber",Climber_Down);
 		NamedCommands.registerCommand("Begin Firing",Fire);
@@ -180,6 +182,7 @@ public class RobotContainer{
 		control.h_povLeft().onTrue						(Intake_Halt ); // Open & Disable Intake
 		control.h_povDown().onTrue						(Intake_Close); // Close & Disable Intake
 		control.h_povRight().onTrue						(Intake_Pulse); // Pulse Intake (as adjetator)
+		control.h_menu().onTrue							(Intake_Calibrate); // zero the intake via the limit switch
 		control.h_L2().onTrue							(Climber_Up  ); // Extend Climber
 		control.h_L2().onFalse							(Climber_Down); // Retract Climber
 
