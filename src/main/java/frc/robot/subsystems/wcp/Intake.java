@@ -318,5 +318,6 @@ public class Intake extends SubsystemBase {
 		builder.addDoubleProperty("RPM", () -> rollerMotor.getVelocity().getValue().in(RPM), null);
 		builder.addDoubleProperty("Pivot Supply Current", () -> pivotMotor.getSupplyCurrent().getValue().in(Amps), null);
 		builder.addDoubleProperty("Roller Supply Current", () -> rollerMotor.getSupplyCurrent().getValue().in(Amps), null);
+		builder.addDoubleProperty("Limit Switch", () -> limitSwitch.getVoltage(), null);
 	}
 }

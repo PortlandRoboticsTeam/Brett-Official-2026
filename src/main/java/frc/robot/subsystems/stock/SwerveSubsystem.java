@@ -39,6 +39,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 import org.json.simple.parser.ParseException;
@@ -69,6 +70,16 @@ public class SwerveSubsystem extends SubsystemBase
    * PhotonVision class to keep an accurate odometry.
    */
   private       Vision      vision;
+
+  /**
+   * CHANGE suppliers for auton steering intercept
+   */
+  private BooleanSupplier useAutonSteeringIntercept = ()->false;
+  private DoubleSupplier  autonSteeringInterceptRPS = ()->0;
+  public void attachAutonSteeringIntercept(BooleanSupplier activation, DoubleSupplier rps){
+    useAutonSteeringIntercept = activation;
+    autonSteeringInterceptRPS = rps;
+  }
 
   /**
    * Initialize {@link SwerveDrive} with the directory provided.
@@ -173,6 +184,14 @@ public class SwerveSubsystem extends SubsystemBase
           this::getRobotVelocity,
           // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
           (speedsRobotRelative, moduleFeedForwards) -> {
+
+             // CHANGE DiOrio did funky shit to inject visual steering into [YAGSL <--> Pathplanner] Conversation
+            speedsRobotRelative = speedsRobotRelative.times(1);
+            if(useAutonSteeringIntercept.getAsBoolean()){
+              speedsRobotRelative.omegaRadiansPerSecond = autonSteeringInterceptRPS.getAsDouble();
+            }
+            
+            
             if (enableFeedforward)
             {
               swerveDrive.drive(
