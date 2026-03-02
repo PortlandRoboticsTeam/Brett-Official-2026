@@ -171,22 +171,17 @@ public class Intake extends SubsystemBase {
 	 * it is interrupted or ends.
 	 */
 	public Command intakeCommand() {
-		return runOnce(
-			() -> {
-				set(Position.INTAKE);
-				set(Speed.INTAKE);
-			}
-			// () -> set(Speed.STOP)
-		);
+		return runOnce(() -> {
+			set(Position.INTAKE);
+			set(Speed.INTAKE);
+		});
 	}
 
 	public Command closeCommand() {
-		return runOnce(
-			() -> {
-				set(Position.STOWED);
-				set(Speed.STOP);
-			}
-		);
+		return runOnce(() -> {
+			set(Position.STOWED);
+			set(Speed.STOP);
+		});
 	}
 
 	public Command haltCommand() {
@@ -217,32 +212,6 @@ public class Intake extends SubsystemBase {
 				set(Speed.STOP);
 			});
 	}
-	
-	/**
-	 * The pivot motor is driven slowly forward until the supply current exceeds
-	 * a threshold, indicating that the mechanism has reached its mechanical home stop.
-	 * Once this occurs, the pivot encoder position is reset to the HOMED angle, the
-	 * subsystem is marked as homed, and the pivot is moved to the STOWED position.
-	 * This command will not run if the mechanism has already been homed.
-	 *
-	 * The command uses {@link InterruptionBehavior#kCancelIncoming}, meaning that
-	 * if another command attempts to interrupt it, the incoming command will be canceled
-	 * and this command will continue running.
-	 */
-	/*
-	 public Command homingCommand() {
-		return Commands.sequence(
-			runOnce(() -> setPivotPercentOutput(0.1)),
-			Commands.waitUntil(() -> pivotMotor.getSupplyCurrent().getValue().in(Amps) > 6),
-			runOnce(() -> {
-				pivotMotor.setPosition(Position.HOMED.angle());
-				isHomed = true;
-				set(Position.STOWED);
-			})
-		)
-		.unless(() -> isHomed)
-		.withInterruptBehavior(InterruptionBehavior.kCancelIncoming);
-	}*/
 	
 	/**
 	 *  Custom Methods Made By DiOrio
@@ -286,12 +255,6 @@ public class Intake extends SubsystemBase {
 					-2),2)
 				));
 		}
-		// System.out.println(
-		// 	"Voltage: "+pivotPID.calculate(pivotMotor.getPosition().getValue().in(Degrees), target)+
-		// 	"\nTarget: "+target+
-		// 	"\nPosition: "+pivotMotor.getPosition().getValue().in(Degrees)+
-		// 	"\nOffset: "+offset
-		// );
 	}
 
 	/*

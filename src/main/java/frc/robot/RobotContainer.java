@@ -6,6 +6,8 @@ package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
+
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -60,15 +62,15 @@ public class RobotContainer{
 	 * input stream.
 	 */
 	SwerveInputStream driveRobotOriented = driveAngularVelocity.copy().robotRelative(true)
-																														 .allianceRelativeControl(false);
+																	.allianceRelativeControl(false);
 
 	SwerveInputStream driveAngularVelocityKeyboard = SwerveInputStream.of(drivebase.getSwerveDrive(),
-																																				() -> -control.d_leftY(),
-																																				() -> -control.d_leftX())
-																																		.withControllerRotationAxis(() -> control.d_rightX())
-																																		.deadband(OperatorConstants.DEADBAND)
-																																		.scaleTranslation(0.8)
-																																		.allianceRelativeControl(true);
+																			() -> -control.d_leftY(),
+																			() -> -control.d_leftX())
+																	.withControllerRotationAxis(() -> control.d_rightX())
+																	.deadband(OperatorConstants.DEADBAND)
+																	.scaleTranslation(0.8)
+																	.allianceRelativeControl(true);
 
 	// Derive the heading axis with math!
 	SwerveInputStream driveDirectAngleKeyboard     = driveAngularVelocityKeyboard.copy()
@@ -96,6 +98,7 @@ public class RobotContainer{
 		configureBindings();
 		driveAdapter.setVehicleYawSupplier(()->drivebase.getHeading().getRadians());
 		DriverStation.silenceJoystickConnectionWarning(true);
+		drivebase.resetOdometry(new Pose2d());
 		
 		//Create the NamedCommands that will be used in PathPlanner
 		NamedCommands.registerCommand("Placeholder Command", Commands.print(" <!> Placeholder Command Triggered"));
@@ -130,7 +133,7 @@ public class RobotContainer{
 		if (RobotBase.isSimulation())
 			drivebase.setDefaultCommand(driveFieldOrientedDirectAngleKeyboard);
 		else
-			drivebase.setDefaultCommand(drivebase.driveCommand(driveAdapter::getDriveY, driveAdapter::getDriveX, driveAdapter::getDriveR, false));
+			drivebase.setDefaultCommand(drivebase.driveCommand(driveAdapter::getDriveY, driveAdapter::getDriveX, ()->driveAdapter.getDriveR()+0*mLemonLime.getVisualJoyStick(), false));
 
 		/* Old Command Bindings (Obsolete and commented out)
 		if (Robot.isSimulation()) {

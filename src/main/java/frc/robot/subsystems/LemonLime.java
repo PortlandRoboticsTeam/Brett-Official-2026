@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.Inches;
 
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
@@ -10,6 +11,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.subsystems.stock.LimelightHelpers;
@@ -37,16 +39,19 @@ public class LemonLime extends SubsystemBase {
 
 	@Override
 	public void periodic() {
-		if (!enabled) return; // skip vision updates when disabled
-
-		PoseEstimate estimate = LimelightHelpers.getBotPoseEstimate_wpiBlue("limelight");
-		if (estimate != null && estimate.pose != null) {
-			swerve.getSwerveDrive().addVisionMeasurement(
-				estimate.pose,
-				estimate.timestampSeconds,
-				null
-			);
-		}
+		// if(enabled){
+		// 	PoseEstimate estimate = LimelightHelpers.getBotPoseEstimate_wpiBlue("limelight");
+		// 	if (estimate != null && estimate.pose != null) {
+		// 		swerve.getSwerveDrive().addVisionMeasurement(
+		// 			estimate.pose,
+		// 			estimate.timestampSeconds,
+		// 			null
+		// 		);
+		// 	}
+		// }
+		SmartDashboard.putNumber("Lemon Angle", getAngularOffset().getDegrees());
+		SmartDashboard.putNumber("Lemon Joystict", getVisualJoyStick());
+		SmartDashboard.putString("Lemon Coords", swerve.getPose().getX()+", "+swerve.getPose().getY());
 	}
 	
 	public Alliance getAlliance(){ return DriverStation.getAlliance().get(); }
@@ -55,15 +60,19 @@ public class LemonLime extends SubsystemBase {
 		return x<a ? a : x>b ? b : x;
 	}
 
-	public double getAngularOffset(){
+	public Rotation2d getAngularOffset(){
 		Pose2d target = getAlliance()!=null && getAlliance().equals(Alliance.Red) ? 
-			new Pose2d() : // Red Hub (default)
-			new Pose2d() ; // Blue Hub
+			new Pose2d(Inches.of(651.22-158.84), Inches.of(181.46), new Rotation2d(0)) : // Red Hub (default)
+			new Pose2d(Inches.of(158.84), Inches.of(181.46), new Rotation2d(0)) ; // Blue Hub
 
 		Pose2d self = swerve.getPose();
-		target = target.relativeTo(self).rotateBy(self.getRotation().times(-1));
+		target = target.relativeTo(self);
 
-		return clamp(target.getTranslation().getAngle().times(.5).getTan(),-1,1);
+		return target.getTranslation().getAngle();
+	}
+
+	public double getVisualJoyStick(){
+		return clamp(getAngularOffset().times(-.5).getTan(), -.1, .1);
 	}
 
 	public DoubleSupplier getAutonInterceptRequest(){

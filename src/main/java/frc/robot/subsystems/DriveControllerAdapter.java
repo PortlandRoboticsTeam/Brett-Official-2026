@@ -27,7 +27,7 @@ public class DriveControllerAdapter extends SubsystemBase{
 
 	@Override
 	public void periodic(){
-		double x=ctrl.d_leftX()*.7, y=ctrl.d_leftY()*.7, r=ctrl.d_rightX();
+		double x=-ctrl.d_leftX()*.7, y=-ctrl.d_leftY()*.7, r=-ctrl.d_rightX();
 		double a=yaw.getAsDouble(), db=OperatorConstants.DEADBAND;
 
 		x = x>db ? x-db : x<-db ? x+db : 0;
