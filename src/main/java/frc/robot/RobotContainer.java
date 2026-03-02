@@ -181,6 +181,7 @@ public class RobotContainer{
 		control.d_square().onTrue						(Commands.runOnce(drivebase::zeroGyro));
 		control.d_triangle().onTrue						(Auto_Aim_Start); // Auto-Aim
 		control.d_triangle().onFalse					(Auto_Aim_Stop ); // Auto-Aim
+		control.d_circle().onChange						(ToggleVisionDriving); // Toggle Vision Data To Swerve
 		
 		control.h_povUp().onTrue						(Intake_Open ); // Open & Activate Intake
 		control.h_povLeft().onTrue						(Intake_Halt ); // Open & Disable Intake

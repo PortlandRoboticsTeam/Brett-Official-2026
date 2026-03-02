@@ -39,16 +39,16 @@ public class LemonLime extends SubsystemBase {
 
 	@Override
 	public void periodic() {
-		// if(enabled){
-		// 	PoseEstimate estimate = LimelightHelpers.getBotPoseEstimate_wpiBlue("limelight");
-		// 	if (estimate != null && estimate.pose != null) {
-		// 		swerve.getSwerveDrive().addVisionMeasurement(
-		// 			estimate.pose,
-		// 			estimate.timestampSeconds,
-		// 			null
-		// 		);
-		// 	}
-		// }
+		if(enabled){
+			PoseEstimate estimate = LimelightHelpers.getBotPoseEstimate_wpiBlue("limelight");
+			if (estimate != null && estimate.pose != null) {
+				swerve.getSwerveDrive().addVisionMeasurement(
+					estimate.pose,
+					estimate.timestampSeconds,
+					null
+				);
+			}
+		}
 		SmartDashboard.putNumber("Lemon Angle", getAngularOffset().getDegrees());
 		SmartDashboard.putNumber("Lemon Joystict", getVisualJoyStick());
 		SmartDashboard.putString("Lemon Coords", swerve.getPose().getX()+", "+swerve.getPose().getY());
