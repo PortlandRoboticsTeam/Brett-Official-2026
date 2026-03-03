@@ -62,9 +62,9 @@ public class Intake extends SubsystemBase {
 	}
 
 	public enum Position {
-		STOWED(0),
-		INTAKE(-122),
-		AGITATE(-75);
+		STOWED(122),
+		INTAKE(0),
+		AGITATE(75);
 
 		private final double degrees;
 
@@ -172,7 +172,6 @@ public class Intake extends SubsystemBase {
 	 */
 	public Command intakeCommand() {
 		return runOnce(() -> {
-			set(Position.INTAKE);
 			set(Speed.INTAKE);
 		});
 	}
@@ -197,19 +196,15 @@ public class Intake extends SubsystemBase {
 	 * returned to the INTAKE position and the roller motor is stopped.
 	 */
 	public Command agitateCommand() {
-		return runOnce(() -> set(Speed.INTAKE))
-			.andThen(
-				Commands.sequence(
+		return Commands.sequence(
 					runOnce(() -> set(Position.AGITATE)),
 					Commands.waitUntil(this::isPositionWithinTolerance),
 					runOnce(() -> set(Position.INTAKE)),
 					Commands.waitUntil(this::isPositionWithinTolerance)
 				)
 				.repeatedly()
-			)
 			.handleInterrupt(() -> {
 				set(Position.INTAKE);
-				set(Speed.STOP);
 			});
 	}
 	

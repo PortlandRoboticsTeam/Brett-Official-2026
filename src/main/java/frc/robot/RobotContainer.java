@@ -82,13 +82,13 @@ public class RobotContainer{
 
 	Command Auto_Aim_Start	= new InstantCommand(()->{}); // TODO Auto-Aim
 	Command Auto_Aim_Stop	= new InstantCommand(()->{}); // TODO Auto-Aim
-	Command Intake_Open		= mIntake.intakeCommand();
+	Command Intake_Start	= mIntake.intakeCommand();
 	Command Intake_Halt		= mIntake.haltCommand();
 	Command Intake_Close	= mIntake.closeCommand();
 	Command Intake_Pulse	= mIntake.agitateCommand();
 	Command Intake_Calibrate= mIntake.calibrateCommand();
 	Command Climber_Up		= mHanger.positionCommand(Hanger.Position.HANGING);
-	Command Climber_Down	= mHanger.homingCommand();
+	Command Climber_Down	= mHanger.positionCommand(Hanger.Position.HOMED);
 	Command Fire			= mShooter.spinUpCommand(3500).andThen(mFloor.feedCommand().alongWith(mFeeder.feedCommand())); // Fire
 	Command Stop_Firing		= mShooter.spinUpCommand(0).alongWith(mFloor.idle()).alongWith(mFeeder.idle()); // Stop Firing
 	Command ToggleVisionDriving = mLemonLime.toggleVisionDriving();
@@ -105,7 +105,7 @@ public class RobotContainer{
 		NamedCommands.registerCommand("Placeholder Command II", Commands.print(" <!> Placeholder Command II Triggered"));
 		NamedCommands.registerCommand("Start Auto-Aim",Auto_Aim_Start);
 		NamedCommands.registerCommand("Stop Auto-Aim",Auto_Aim_Stop);
-		NamedCommands.registerCommand("Open & Activate Intake",Intake_Open);
+		NamedCommands.registerCommand("Open & Activate Intake",Intake_Start);
 		NamedCommands.registerCommand("Open & Disable Intake",Intake_Halt);
 		NamedCommands.registerCommand("Close & Disable Intake",Intake_Close);
 		NamedCommands.registerCommand("Pulse Intake (as adjetator)",Intake_Pulse);
@@ -183,7 +183,7 @@ public class RobotContainer{
 		control.d_triangle().onFalse					(Auto_Aim_Stop ); // Auto-Aim
 		control.d_circle().onChange						(ToggleVisionDriving); // Toggle Vision Data To Swerve
 		
-		control.h_povUp().onTrue						(Intake_Open ); // Open & Activate Intake
+		control.h_povUp().onTrue						(Intake_Start ); // Open & Activate Intake
 		control.h_povLeft().onTrue						(Intake_Halt ); // Open & Disable Intake
 		control.h_povDown().onTrue						(Intake_Close); // Close & Disable Intake
 		control.h_povRight().onTrue						(Intake_Pulse); // Pulse Intake (as adjetator)
