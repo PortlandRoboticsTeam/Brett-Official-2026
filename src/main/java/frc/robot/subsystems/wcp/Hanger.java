@@ -52,7 +52,8 @@ public class Hanger extends SubsystemBase {
         }
     }
 
-    private static final Per<DistanceUnit, AngleUnit> kHangerExtensionPerMotorAngle = Inches.of(6).div(Rotations.of(142));
+    private static final Per<DistanceUnit, AngleUnit> kHangerExtensionPerMotorAngle = 
+            Inches.of(6).div(Rotations.of(142));
     private static final Distance kExtensionTolerance = Inches.of(1);
 
     private final TalonFX motor;
@@ -140,7 +141,7 @@ public class Hanger extends SubsystemBase {
     public Command homingCommand() {
         return Commands.sequence(
             runOnce(() -> setPercentOutput(-0.05)),
-            Commands.waitUntil(() -> motor.getSupplyCurrent().getValue().in(Amps) > 0.4),
+            Commands.waitUntil(() -> motor.getSupplyCurrent().getValue().in(Amps) > .4),
             runOnce(() -> {
                 motor.setPosition(Position.HOMED.motorAngle());
                 isHomed = true;

@@ -21,6 +21,7 @@ import frc.robot.Constants.Ports;
 
 public class Floor extends SubsystemBase {
     public enum Speed {
+        REVERSE(-1),
         STOP(0),
         FEED(0.83);
 
@@ -68,6 +69,9 @@ public class Floor extends SubsystemBase {
 
     public Command feedCommand() {
         return startEnd(() -> set(Speed.FEED), () -> set(Speed.STOP));
+    }
+    public Command reverseCommand() {
+        return startEnd(() -> set(Speed.REVERSE), () -> set(Speed.STOP));
     }
 
     @Override

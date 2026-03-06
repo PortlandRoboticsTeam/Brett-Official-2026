@@ -9,23 +9,28 @@ import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard; 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.commands.AimAndDriveCommand;
+import frc.robot.commands.SubsystemCommands;
 import frc.robot.subsystems.ControllerHandler;
 import frc.robot.subsystems.DriveControllerAdapter;
 import frc.robot.subsystems.LemonLime;
 import frc.robot.subsystems.stock.SwerveSubsystem;
 import frc.robot.subsystems.wcp.*;
 
+import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.Inches;
+
 import java.io.File;
+import java.util.Optional;
+
 import swervelib.SwerveInputStream;
 
 public class RobotContainer{
@@ -39,7 +44,7 @@ public class RobotContainer{
 	private final Hanger	mHanger		 = new Hanger();
 	private final Hood		mHood		 = new Hood();
 	private final Intake	mIntake		 = new Intake();
-	private final Limelight	mLimelight	 = new Limelight("limelight");
+	private final Limelight	mLimelight	 = new Limelight(Constants.Ports.FORWARD_LIMELIGHT);
 	private final LemonLime mLemonLime   = new LemonLime(drivebase);
 	private final Shooter	mShooter	 = new Shooter();
 
@@ -80,25 +85,72 @@ public class RobotContainer{
 		.translationHeadingOffset(true)
 		.translationHeadingOffset(Rotation2d.fromDegrees(0));
 
-	Command Auto_Aim_Start	= new InstantCommand(()->{}); // TODO Auto-Aim
-	Command Auto_Aim_Stop	= new InstantCommand(()->{}); // TODO Auto-Aim
+	Command Auto_Aim_Start	= mLemonLime.getEnableCommand();
+	Command Auto_Aim_Stop	= mLemonLime.getDisableCommand();
 	Command Intake_Open		= mIntake.intakeCommand();
 	Command Intake_Halt		= mIntake.haltCommand();
 	Command Intake_Close	= mIntake.closeCommand();
 	Command Intake_Pulse	= mIntake.agitateCommand();
-	Command Intake_Calibrate= mIntake.calibrateCommand();
+	Command Calibrate		= mIntake.calibrateCommand().alongWith(mHanger.homingCommand());
 	Command Climber_Up		= mHanger.positionCommand(Hanger.Position.HANGING);
-	Command Climber_Down	= mHanger.homingCommand();
-	Command Fire			= mShooter.spinUpCommand(3500).andThen(mFloor.feedCommand().alongWith(mFeeder.feedCommand())); // Fire
-	Command Stop_Firing		= mShooter.spinUpCommand(0).alongWith(mFloor.idle()).alongWith(mFeeder.idle()); // Stop Firing
+	Command Climber_Down	= mHanger.positionCommand(Hanger.Position.HUNG);
+	// Command Fire			= mShooter.spinUpCommand(5000).raceWith(Commands.waitSeconds(5)).andThen(mFloor.feedCommand().alongWith(mFeeder.feedCommand())); // Fire
+	// Command Stop_Firing		= mShooter.spinUpCommand(0).alongWith(mFloor.idle()).alongWith(mFeeder.idle()); // Stop Firing
+	// Command Feeder_Reverse  = mFloor.reverseCommand().alongWith(mFeeder.reverseCommand());
+	// Command Stop_Firing		= mShooter.spinUpCommand(0).alongWith(mFloor.idle()).alongWith(mFeeder.idle()); // Stop Firing
+	Command Spool_Up		= mShooter.spinUpCommand(5000).raceWith(Commands.waitSeconds(5));
+	Command Spool_Down		= mShooter.spinUpCommand(0).raceWith(Commands.waitSeconds(10));
+	Command Feeder_Reverse  = mFloor.reverseCommand().alongWith(mFeeder.reverseCommand());
+	Command Feeder_Forward	= mFloor.feedCommand().alongWith(mFeeder.feedCommand());
+	Command Feeder_Stop		= mFloor.idle().alongWith(mFeeder.idle());
+	Command Launcher_Fire	=  (mFloor.reverseCommand()
+								.alongWith(
+									mFeeder.reverseCommand()
+								).raceWith(
+									mShooter.spinUpCommand(5000)
+								)).raceWith(
+									Commands.waitSeconds(5)
+								).andThen(
+									mFloor.feedCommand()
+									.alongWith(
+										mFeeder.feedCommand()
+								));
+	Command Launcher_Stop	= 	mFloor.reverseCommand()
+								.andThen(
+									mFeeder.reverseCommand()
+								).raceWith(
+									Commands.none()
+								).andThen(
+									mShooter.spinUpCommand(0)
+								).andThen(
+									Commands.waitSeconds(2)
+								).andThen(
+									mFloor.idle()
+									.andThen(
+										mFeeder.idle()
+								));
+	Command Launcher_Unjam  = 	mFloor.reverseCommand()
+								.alongWith(
+									mFeeder.reverseCommand()
+								).alongWith(
+									mShooter.spinUpCommand(5000)
+									.raceWith( Commands.waitSeconds(.4) )
+									.andThen( mShooter.spinUpCommand(0   ) )
+									.raceWith( Commands.waitSeconds(.4) )
+									.repeatedly()
+								);
+	
 	Command ToggleVisionDriving = mLemonLime.toggleVisionDriving();
+
+	SubsystemCommands subsystemCommands = new SubsystemCommands(drivebase, mIntake, mFloor, mFeeder, mShooter, mHood, mHanger);
+	Command aimAndShoot = subsystemCommands.aimAndShoot();
 	
 	public RobotContainer() {
 		// Configure the trigger bindings
 		configureBindings();
 		driveAdapter.setVehicleYawSupplier(()->drivebase.getHeading().getRadians());
 		DriverStation.silenceJoystickConnectionWarning(true);
-		drivebase.resetOdometry(new Pose2d());
+		drivebase.resetOdometry(new Pose2d(Inches.of(158.84), Inches.of(181.46-143),new Rotation2d(Degrees.of(90))));
 		
 		//Create the NamedCommands that will be used in PathPlanner
 		NamedCommands.registerCommand("Placeholder Command", Commands.print(" <!> Placeholder Command Triggered"));
@@ -109,11 +161,11 @@ public class RobotContainer{
 		NamedCommands.registerCommand("Open & Disable Intake",Intake_Halt);
 		NamedCommands.registerCommand("Close & Disable Intake",Intake_Close);
 		NamedCommands.registerCommand("Pulse Intake (as adjetator)",Intake_Pulse);
-		NamedCommands.registerCommand("Calibrate Intake",Intake_Calibrate);
+		NamedCommands.registerCommand("Calibrate Intake",Calibrate);
 		NamedCommands.registerCommand("Extend Climber",Climber_Up);
 		NamedCommands.registerCommand("Retract Climber",Climber_Down);
-		NamedCommands.registerCommand("Begin Firing",Fire);
-		NamedCommands.registerCommand("Stop Firing",Stop_Firing);
+		// NamedCommands.registerCommand("Begin Firing",Fire);
+		// NamedCommands.registerCommand("Stop Firing",Stop_Firing);
 
 
 		//Have the autoChooser pull in all PathPlanner autos as options
@@ -127,71 +179,44 @@ public class RobotContainer{
 	}
 
 	private void configureBindings() {
+		//Pass vision data to the swerve drive system
+
+		mLimelight.setDefaultCommand(updateVisionCommand());
+
 		// Command driveFieldOrientedAnglularVelocity    = drivebase.driveFieldOriented(driveAngularVelocity);
 		Command driveFieldOrientedDirectAngleKeyboard = drivebase.driveFieldOriented(driveDirectAngleKeyboard);
 
 		if (RobotBase.isSimulation())
 			drivebase.setDefaultCommand(driveFieldOrientedDirectAngleKeyboard);
 		else
-			drivebase.setDefaultCommand(drivebase.driveCommand(driveAdapter::getDriveY, driveAdapter::getDriveX, ()->driveAdapter.getDriveR()+0*mLemonLime.getVisualJoyStick(), false));
-
-		/* Old Command Bindings (Obsolete and commented out)
-		if (Robot.isSimulation()) {
-			Pose2d target = new Pose2d(new Translation2d(1, 4),
-																 Rotation2d.fromDegrees(90));
-			//drivebase.getSwerveDrive().field.getObject("targetPose").setPose(target);
-			driveDirectAngleKeyboard.driveToPose(() -> target,
-																					 new ProfiledPIDController(5, 0, 0,
-																																		 new Constraints(5, 2)),
-																					 new ProfiledPIDController(5, 0, 0,
-																																		 new Constraints(Units.degreesToRadians(360),
-																																										 Units.degreesToRadians(180))
-																					 ));
-			control.d_button(15).onTrue(Commands.runOnce(() -> drivebase.resetOdometry(new Pose2d(3, 3, new Rotation2d())))); // mute
-			control.d_triangle().whileTrue(drivebase.sysIdDriveMotorCommand());
-			control.d_circle().whileTrue(Commands.runEnd(() -> driveDirectAngleKeyboard.driveToPoseEnabled(true),
-																										 () -> driveDirectAngleKeyboard.driveToPoseEnabled(false)));
-		}
+			drivebase.setDefaultCommand(drivebase.driveCommand(driveAdapter::getDriveY, 
+			driveAdapter::getDriveX, 
+			// ()->(driveAdapter.getDriveR()+mLemonLime.getVisualJoyStick()), false));//
+			()->(driveAdapter.getDriveR()), false));//
 
 //  drivebase.driveToPose(new Pose2d(new Translation2d(4, 4), Rotation2d.fromDegrees(0));
 
-		if (DriverStation.isTest())
-		{
-			drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocity); // Overrides drive command above!
-
-			control.d_square().whileTrue(Commands.runOnce(drivebase::lock, drivebase).repeatedly());
-			control.d_menu().onTrue((Commands.runOnce(drivebase::zeroGyro))); // menu
-			control.d_blink().whileTrue(drivebase.centerModulesCommand()); // wiper fluid
-			control.d_L2().onTrue(Commands.none());
-			control.d_R2().onTrue(Commands.none());
-		} else
-		{
-			control.d_cross().onTrue((Commands.runOnce(drivebase::zeroGyro)));
-			control.d_square().onTrue(Commands.runOnce(drivebase::addFakeVisionReading));
-			control.d_menu().whileTrue(Commands.none());
-			control.d_blink().whileTrue(Commands.none());
-			control.d_L2().whileTrue(Commands.runOnce(drivebase::lock, drivebase).repeatedly());
-			control.d_R2().onTrue(Commands.none());
-		}
-		*/
-
 		control.d_R1().onTrue 							(Commands.runOnce(()->driveAdapter.setFieldOriented(true)));
 		control.d_R1().onFalse							(Commands.runOnce(()->driveAdapter.setFieldOriented(false)));
-		control.d_LSB().and(control.d_RSB()).onTrue		(Commands.runOnce(drivebase::lock));
+		control.d_LSB().and(control.d_RSB()).onTrue		(Commands.runOnce(drivebase::lock).repeatedly());
 		control.d_square().onTrue						(Commands.runOnce(drivebase::zeroGyro));
-		control.d_triangle().onTrue						(Auto_Aim_Start); // Auto-Aim
-		control.d_triangle().onFalse					(Auto_Aim_Stop ); // Auto-Aim
+
+		control.d_triangle().whileTrue(aimAndShoot);
+
+		// control.d_triangle().onTrue						(Auto_Aim_Start); // Auto-Aim
+		// control.d_triangle().onFalse					(Auto_Aim_Stop ); // Auto-Aim
 		
 		control.h_povUp().onTrue						(Intake_Open ); // Open & Activate Intake
 		control.h_povLeft().onTrue						(Intake_Halt ); // Open & Disable Intake
 		control.h_povDown().onTrue						(Intake_Close); // Close & Disable Intake
 		control.h_povRight().onTrue						(Intake_Pulse); // Pulse Intake (as adjetator)
-		control.h_menu().onTrue							(Intake_Calibrate); // zero the intake via the limit switch
-		control.h_L2().onTrue							(Climber_Up  ); // Extend Climber
-		control.h_L2().onFalse							(Climber_Down); // Retract Climber
+		control.h_menu().onTrue							(Calibrate); // zero the intake via the limit switch
+		control.h_L2().onTrue							(Climber_Up  .andThen(Commands.print(">> Up"))); // Extend Climber
+		control.h_L2().onFalse							(Climber_Down.andThen(Commands.print(">> Down"))); // Retract Climber
 
-		control.h_R2().onTrue							(Fire        ); // Fire
-		control.h_R2().onFalse							(Stop_Firing ); // Stop Firing
+		control.h_R2().onTrue							(Launcher_Fire ); // Fire
+		control.h_R2().or(control.h_cross()).onFalse	(Launcher_Stop ); // Stop Firing
+		control.h_cross().onTrue						(Launcher_Unjam); // Backfeed
 	} 
 
 	/**
@@ -208,4 +233,19 @@ public class RobotContainer{
 	public void setMotorBrake(boolean brake) {
 		drivebase.setMotorBrake(brake);
 	}
+
+	private Command updateVisionCommand() {
+        return mLimelight.run(() -> {
+            final Pose2d currentRobotPose = drivebase.getPose();
+            final Optional<Limelight.Measurement> measurement = mLimelight.getMeasurement(currentRobotPose);
+            measurement.ifPresent(m -> {
+                drivebase.getSwerveDrive().addVisionMeasurement(
+                    m.poseEstimate.pose, 
+                    m.poseEstimate.timestampSeconds,
+                    m.standardDeviations
+                );
+            });
+        })
+        .ignoringDisable(true);
+    }
 }

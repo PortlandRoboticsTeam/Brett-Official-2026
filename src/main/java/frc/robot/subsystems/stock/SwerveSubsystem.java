@@ -6,6 +6,7 @@ package frc.robot.subsystems.stock;
 
 import static edu.wpi.first.units.Units.Meter;
 
+import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.commands.PathfindingCommand;
@@ -263,6 +264,20 @@ public class SwerveSubsystem extends SubsystemBase
         }
       }
     });
+  }
+
+  public void aimAtRequest(SwerveRequest.FieldCentricFacingAngle request) {
+    if (request == null) return;
+
+    Rotation2d target = request.TargetDirection;
+    double robotRelativeOmega = target.minus(getHeading()).getRadians();
+
+    swerveDrive.drive(
+      new Translation2d(0, 0),
+      robotRelativeOmega,
+      false,
+      false
+    );
   }
 
   /**
@@ -590,7 +605,7 @@ public class SwerveSubsystem extends SubsystemBase
    *
    * @return true if the red alliance, false if blue. Defaults to false if none is available.
    */
-  private boolean isRedAlliance()
+  public boolean isRedAlliance()
   {
     var alliance = DriverStation.getAlliance();
     return alliance.isPresent() ? alliance.get() == DriverStation.Alliance.Red : false;
