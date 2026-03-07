@@ -44,6 +44,8 @@ public final class Constants
 
    public static final PIDConstants TRANSLATION_PID = new PIDConstants(0.7, 0, 0);
    public static final PIDConstants ANGLE_PID       = new PIDConstants(0.4, 0, 0.01);
+   public static final String AutonName = "None";
+   public static final boolean FlipSide = false;
  }
 
 	public static final class DrivebaseConstants

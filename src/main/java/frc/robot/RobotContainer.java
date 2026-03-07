@@ -85,8 +85,8 @@ public class RobotContainer{
 	Command Intake_Close	= mIntake.closeCommand();
 	Command Intake_Pulse	= mIntake.agitateCommand();
 	Command Intake_Calibrate= mIntake.calibrateCommand();
-	Command Climber_Down	= Commands.none();//mHanger.positionCommand(Hanger.Position.HUNG);
-	Command Climber_Up		= Commands.none();//mHanger.positionCommand(Hanger.Position.HANGING);
+	Command Climber_Down	= mHanger.positionCommand(Hanger.Position.DOWN);
+	Command Climber_Up		= mHanger.positionCommand(Hanger.Position.UP);
 
 	Command FH_Hopper_Aim   = PrepareShotCommand.aimTargetStaticCommand(mShooter,mHood,()->drivebase.getPose());
 	Command FH_Downrange    = PrepareShotCommand.aimDownrangeCommand(mShooter,mHood,()->drivebase.getPose());
@@ -109,7 +109,7 @@ public class RobotContainer{
 		DriverStation.silenceJoystickConnectionWarning(true);
 		drivebase.resetOdometry(new Pose2d(Inches.of(158.84), Inches.of(181.46-143),new Rotation2d(Degrees.of(90))));
 
-		AutoCompiler.SetUpCompiler(drivebase);
+		AutoCompiler.SetUpCompiler();
 		driveAdapter.setFieldOriented(false);
 		
 		//Create the NamedCommands that will be used in PathPlanner
@@ -193,7 +193,8 @@ public class RobotContainer{
 	 * @return the command to run in autonomous
 	 */
 	public Command getAutonomousCommand() {
-		return AutoCompiler.compileWithChooser();
+		AutoCompiler.loadAutonomousProgram(Constants.AutonConstants.AutonName, Constants.AutonConstants.FlipSide);
+		return AutoCompiler.getAuto();//AutoCompiler.GetAutoBasic(Constants.AutonConstants.AutonName);
 	}
 
 	public void setMotorBrake(boolean brake) {
