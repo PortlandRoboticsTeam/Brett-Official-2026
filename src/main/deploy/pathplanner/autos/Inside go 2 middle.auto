@@ -1,0 +1,43 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Start inside to Shoot"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Shoot to end rmp"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "From end to middle"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "From middle intake"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Middle to shoot 2"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": null,
+  "choreoAuto": false
+}
