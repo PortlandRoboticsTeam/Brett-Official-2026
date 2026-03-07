@@ -1,7 +1,5 @@
 package frc.robot.subsystems;
 
-import java.util.function.BooleanSupplier;
-
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.CommandPS5Controller;
@@ -29,10 +27,14 @@ public class ControllerHandler extends SubsystemBase {
 		swapButton = swapButtonID;
 		dcc = new CommandPS5Controller(driverPort);
 		hcc = new CommandPS5Controller(helperPort);
-		dcc.button(swapButton).onTrue (runOnce(() -> { if(!one_handed){ d_swap=true ; dcc.setRumble(RumbleType.kBothRumble, 0); } }));
-		dcc.button(swapButton).onFalse(runOnce(() -> { if(!one_handed){ d_swap=false; dcc.setRumble(RumbleType.kBothRumble, 0); } }));
-		hcc.button(swapButton).onTrue (runOnce(() -> { if(!one_handed){ h_swap=true ; dcc.setRumble(RumbleType.kBothRumble, 0); } }));
-		hcc.button(swapButton).onFalse(runOnce(() -> { if(!one_handed){ h_swap=false; dcc.setRumble(RumbleType.kBothRumble, 0); } }));
+
+		/*
+		 * Disabling swap button functionality, removing bindings to left bumper.
+		 */
+		// dcc.button(swapButton).onTrue (runOnce(() -> { if(!one_handed){ d_swap=true ; dcc.setRumble(RumbleType.kBothRumble, 0); } }));
+		// dcc.button(swapButton).onFalse(runOnce(() -> { if(!one_handed){ d_swap=false; dcc.setRumble(RumbleType.kBothRumble, 0); } }));
+		// hcc.button(swapButton).onTrue (runOnce(() -> { if(!one_handed){ h_swap=true ; dcc.setRumble(RumbleType.kBothRumble, 0); } }));
+		// hcc.button(swapButton).onFalse(runOnce(() -> { if(!one_handed){ h_swap=false; dcc.setRumble(RumbleType.kBothRumble, 0); } }));
 	}
 
 	public ControllerHandler(){this(5,0,1);}

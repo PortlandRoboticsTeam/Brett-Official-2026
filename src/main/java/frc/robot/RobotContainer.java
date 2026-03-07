@@ -95,10 +95,14 @@ public class RobotContainer{
 	Command Calibrate		= mIntake.calibrateCommand();//.alongWith(mHanger.homingCommand());
 	Command Climber_Up		= mHanger.positionCommand(Hanger.Position.HANGING);
 	Command Climber_Down	= mHanger.positionCommand(Hanger.Position.HUNG);
+
+
 	// Command Fire			= mShooter.spinUpCommand(5000).raceWith(Commands.waitSeconds(5)).andThen(mFloor.feedCommand().alongWith(mFeeder.feedCommand())); // Fire
 	// Command Stop_Firing		= mShooter.spinUpCommand(0).alongWith(mFloor.idle()).alongWith(mFeeder.idle()); // Stop Firing
 	// Command Feeder_Reverse  = mFloor.reverseCommand().alongWith(mFeeder.reverseCommand());
 	// Command Stop_Firing		= mShooter.spinUpCommand(0).alongWith(mFloor.idle()).alongWith(mFeeder.idle()); // Stop Firing
+
+
 	Command Spool_Up		= mShooter.spinUpCommand(5000).raceWith(Commands.waitSeconds(5));
 	Command Spool_Down		= mShooter.spinUpCommand(0).raceWith(Commands.waitSeconds(10));
 	Command Feeder_Reverse  = mFloor.reverseCommand().alongWith(mFeeder.reverseCommand());
@@ -196,24 +200,20 @@ public class RobotContainer{
 
 	private void configureBindings() {
 		//Pass vision data to the swerve drive system
-
 		mLimelight.setDefaultCommand(updateVisionCommand());
 
-		// Command driveFieldOrientedAnglularVelocity    = drivebase.driveFieldOriented(driveAngularVelocity);
-		Command driveFieldOrientedDirectAngleKeyboard = drivebase.driveFieldOriented(driveDirectAngleKeyboard);
-
-		if (RobotBase.isSimulation())
-			drivebase.setDefaultCommand(driveFieldOrientedDirectAngleKeyboard);
-		else
-			drivebase.setDefaultCommand(drivebase.driveCommand(driveAdapter::getDriveY, 
-			driveAdapter::getDriveX, 
-			()->(driveAdapter.getDriveR() + mLemonLime.getVisualJoyStick()), false));//
-			// ()->(driveAdapter.getDriveR()), false));//
-
-//  drivebase.driveToPose(new Pose2d(new Translation2d(4, 4), Rotation2d.fromDegrees(0));
+		//setup driving functionality
 		driveAdapter.setFieldOriented(true);
+		drivebase.setDefaultCommand(
+			drivebase.driveCommand(
+				driveAdapter::getDriveY, 
+				driveAdapter::getDriveX, 
+				()->(driveAdapter.getDriveR() + mLemonLime.getVisualJoyStick()),
+			false));//
+
 		// control.h_triangle().onTrue 					(Commands.runOnce(()->driveAdapter.setFieldOriented(true)));
 		// control.h_triangle().onFalse					(Commands.runOnce(()->driveAdapter.setFieldOriented(false)));
+
 		control.d_LSB().and(control.d_RSB()).onTrue		(Commands.runOnce(drivebase::lock).repeatedly());
 		control.d_square().onTrue						(Commands.runOnce(drivebase::zeroGyro));
 
@@ -233,6 +233,7 @@ public class RobotContainer{
 		control.h_R2().onTrue							(Launcher_Fire ); // Fire
 		control.h_R2().or(control.h_cross()).onFalse	(Launcher_Stop ); // Stop Firing
 		control.h_cross().onTrue						(Launcher_Unjam); // Backfeed
+
 		control.d_circle().whileTrue(PrepareShotCommand.aimWithDistanceToHub(mShooter, mHood, ()->drivebase.getPose()));
 	} 
 
