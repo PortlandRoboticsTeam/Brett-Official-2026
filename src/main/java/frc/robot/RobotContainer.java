@@ -4,18 +4,14 @@
 
 package frc.robot;
 
-import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard; 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.PrepareShotCommand;
 import frc.robot.commands.SubsystemCommands;
@@ -52,12 +48,12 @@ public class RobotContainer{
 	// Converts driver input into a field-relative ChassisSpeeds that is controlled
 	// by angular velocity.
 	SwerveInputStream driveAngularVelocity = SwerveInputStream.of(drivebase.getSwerveDrive(),
-																																() -> driveAdapter.getDriveY(),
-																																() -> driveAdapter.getDriveX())
-																														.withControllerRotationAxis(control::d_rightX)
-																														.deadband(OperatorConstants.DEADBAND)
-																														.scaleTranslation(0.8)
-																														.allianceRelativeControl(true);
+																			() -> driveAdapter.getDriveY(),
+																			() -> driveAdapter.getDriveX())
+																	.withControllerRotationAxis(control::d_rightX)
+																	.deadband(OperatorConstants.DEADBAND)
+																	.scaleTranslation(0.8)
+																	.allianceRelativeControl(true);
 
 	/**
 	 * Clone's the angular velocity input stream and converts it to a robotRelative
@@ -88,77 +84,22 @@ public class RobotContainer{
 	Command Intake_Halt		= mIntake.haltCommand();
 	Command Intake_Close	= mIntake.closeCommand();
 	Command Intake_Pulse	= mIntake.agitateCommand();
-	Command Intake_Calibrate= mIntake.calibrateCommand();//.alongWith(mHanger.homingCommand());
+	Command Intake_Calibrate= mIntake.calibrateCommand();
 	Command Climber_Down	= Commands.none();//mHanger.positionCommand(Hanger.Position.HUNG);
 	Command Climber_Up		= Commands.none();//mHanger.positionCommand(Hanger.Position.HANGING);
 
-
-	// Command Fire			= mShooter.spinUpCommand(5000).raceWith(Commands.waitSeconds(5)).andThen(mFloor.feedCommand().alongWith(mFeeder.feedCommand())); // Fire
-	// Command Stop_Firing		= mShooter.spinUpCommand(0).alongWith(mFloor.idle()).alongWith(mFeeder.idle()); // Stop Firing
-	// Command Feeder_Reverse  = mFloor.reverseCommand().alongWith(mFeeder.reverseCommand());
-	// Command Stop_Firing		= mShooter.spinUpCommand(0).alongWith(mFloor.idle()).alongWith(mFeeder.idle()); // Stop Firing
-
-
-	// Command Spool_Up		= mShooter.spinUpCommand(5000).raceWith(Commands.waitSeconds(5));
 	Command FH_Hopper_Aim   = PrepareShotCommand.aimTargetStaticCommand(mShooter,mHood,()->drivebase.getPose());
 	Command FH_Downrange    = PrepareShotCommand.aimDownrangeCommand(mShooter,mHood,()->drivebase.getPose());
-	Command Spool_Down		= PrepareShotCommand.haltCommand(mShooter,mHood,()->drivebase.getPose());
+	Command FH_Stop			= PrepareShotCommand.haltCommand(mShooter,mHood,()->drivebase.getPose());
 	Command Feeder_Reverse  = mFloor.reverseCommand().alongWith(mFeeder.reverseCommand());
 	Command Feeder_Forward	= mFloor.feedCommand().alongWith(mFeeder.feedCommand());
 	Command Feeder_Stop		= mFloor.idle().alongWith(mFeeder.idle());
 
-	// Command Launcher_Fire	= 
-	// 	//prepare the hood with the default shooting position
-	// 	PrepareShotCommand.defaultAim(mHood)
-
-	// 	//spin the shooter up to the shooting RPM
-	// 	.alongWith(mShooter.spinUpToDefaultRpm())
-		
-	// 	// //initially reverse the feeder to prevent jamming of balls
-	// 	.alongWith((
-	// 		mFloor.reverseCommand()
-	// 		.alongWith(mFeeder.reverseCommand())
-	// 		.andThen(mFloor.feedCommand())
-	// 		.alongWith(mFeeder.feedCommand())
-	// 	);
-								
-	// Command Launcher_Stop	= 	mFloor.reverseCommand()
-	// 							.andThen(
-	// 								mFeeder.reverseCommand()
-	// 							).raceWith(
-	// 								Commands.none()
-	// 							).andThen(
-	// 								mShooter.spinUpCommand(0)
-	// 							).andThen(
-	// 								Commands.waitSeconds(2)
-	// 							).andThen(
-	// 								mFloor.idle()
-	// 								.andThen(
-	// 									mFeeder.idle()
-	// 							));
-	Command Launcher_Unjam  = 	mFloor.reverseCommand()
-								.alongWith(
-									mFeeder.reverseCommand()
-								// ).alongWith(
-								// 	mShooter.spinUpCommand(5000)
-								// 	.raceWith( Commands.waitSeconds(.4) )
-								// 	.andThen( mShooter.spinUpCommand(0   ) )
-								// 	.raceWith( Commands.waitSeconds(.4) )
-								// 	.repeatedly()
-								);
+	Command Launcher_Unjam  = 	mFloor.reverseCommand().alongWith(mFeeder.reverseCommand());
 	
-	Command ToggleVisionDriving = mLemonLime.toggleVisionDriving();
-
 	SubsystemCommands subsystemCommands = new SubsystemCommands(
-		drivebase,
-		mIntake,
-		mFloor,
-		mFeeder,
-		mShooter,
-		mHood,
-		mHanger,
-		driveAdapter::getDriveY, 
-		driveAdapter::getDriveX);
+		drivebase,mIntake,mFloor,mFeeder,mShooter,mHood,mHanger,
+		driveAdapter::getDriveY, driveAdapter::getDriveX);
 	Command aimAndShoot = subsystemCommands.aimAndShoot();
 	
 	public RobotContainer() {
@@ -174,13 +115,23 @@ public class RobotContainer{
 		//Create the NamedCommands that will be used in PathPlanner
 		NamedCommands.registerCommand("Placeholder Command", Commands.print(" <!> Placeholder Command Triggered"));
 		NamedCommands.registerCommand("Placeholder Command II", Commands.print(" <!> Placeholder Command II Triggered"));
-		NamedCommands.registerCommand("Start Auto-Aim",Auto_Aim_Start);
-		NamedCommands.registerCommand("Stop Auto-Aim",Auto_Aim_Stop);
+		NamedCommands.registerCommand("Do Nothing", Commands.none());
+		NamedCommands.registerCommand("Start Auto-Azimuth",Auto_Aim_Start);
+		NamedCommands.registerCommand("Stop Auto-Azimuth",Auto_Aim_Stop);
+
 		NamedCommands.registerCommand("Open & Activate Intake",Intake_Open);
 		NamedCommands.registerCommand("Open & Disable Intake",Intake_Halt);
 		NamedCommands.registerCommand("Close & Disable Intake",Intake_Close);
 		NamedCommands.registerCommand("Pulse Intake (as adjetator)",Intake_Pulse);
 		NamedCommands.registerCommand("Calibrate Intake",Intake_Calibrate);
+
+		NamedCommands.registerCommand("Spool Up for Hopper", FH_Hopper_Aim);
+		NamedCommands.registerCommand("Spool Up for Passing", FH_Downrange);
+		NamedCommands.registerCommand("Spool Down", FH_Stop);
+		NamedCommands.registerCommand("Feeder Forward", Feeder_Forward);
+		NamedCommands.registerCommand("Feeder Reverse", Feeder_Reverse);
+		NamedCommands.registerCommand("Feeder Stop", Feeder_Stop);
+
 		NamedCommands.registerCommand("Extend Climber",Climber_Up);
 		NamedCommands.registerCommand("Retract Climber",Climber_Down);
 
@@ -222,7 +173,7 @@ public class RobotContainer{
 		 */
 		control.h_R2().onTrue							(FH_Hopper_Aim ); // Fire
 		control.h_R1().onTrue							(FH_Downrange ); // Fire
-		control.h_R2().or(control.h_R1()).onFalse		(Spool_Down   ); // Stop Firing
+		control.h_R2().or(control.h_R1()).onFalse		(FH_Stop   ); // Stop Firing
 		control.h_cross().onTrue						(Launcher_Unjam); // Backfeed
 		control.h_circle().onTrue						(Feeder_Forward); // Backfeed
 		control.h_circle().or(control.h_cross()).onFalse(Feeder_Stop); // Backfeed
