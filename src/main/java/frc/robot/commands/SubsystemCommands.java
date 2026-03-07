@@ -45,28 +45,6 @@ public final class SubsystemCommands {
         this.leftInput = leftInput;
     }
 
-    public SubsystemCommands(
-        SwerveSubsystem swerve,
-        Intake intake,
-        Floor floor,
-        Feeder feeder,
-        Shooter shooter,
-        Hood hood,
-        Hanger hanger
-    ) {
-        this(
-            swerve,
-            intake,
-            floor,
-            feeder,
-            shooter,
-            hood,
-            hanger,
-            () -> 0,
-            () -> 0
-        );
-    }
-
     public Command aimAndShoot() {
         final AimAndDriveCommand aimAndDriveCommand = new AimAndDriveCommand(swerve, forwardInput, leftInput);
         final PrepareShotCommand prepareShotCommand = new PrepareShotCommand(shooter, hood, () -> swerve.getPose());

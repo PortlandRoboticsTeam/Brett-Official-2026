@@ -1,6 +1,7 @@
 package frc.robot.commands;
 
 import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.FeetPerSecond;
 
 import java.util.function.DoubleSupplier;
 
@@ -13,11 +14,11 @@ import edu.wpi.first.math.Vector;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.numbers.N2;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.DriveInputSmoother;
 import frc.robot.GeometryUtil;
-import frc.robot.Constants.Driving;
 import frc.robot.subsystems.stock.SwerveSubsystem;
 import frc.robot.subsystems.wcp.Landmarks;
 
@@ -30,13 +31,12 @@ public class AimAndDriveCommand extends Command {
     // private final DriveInputSmoother inputSmoother;
 
     private final SwerveRequest.FieldCentricFacingAngle fieldCentricFacingAngleRequest = new SwerveRequest.FieldCentricFacingAngle()
-        .withRotationalDeadband(Driving.kPIDRotationDeadband)
-        .withMaxAbsRotationalRate(Driving.kMaxRotationalRate)
+        .withRotationalDeadband(0.01)
+        .withMaxAbsRotationalRate(Units.degreesToRadians(540))
         .withDriveRequestType(DriveRequestType.OpenLoopVoltage)
         .withSteerRequestType(SteerRequestType.MotionMagicExpo)
         .withForwardPerspective(ForwardPerspectiveValue.OperatorPerspective)
-        .withHeadingPID(120, 0, 0)
-        ;
+        .withHeadingPID(150, 0.6, 3);
 
     public AimAndDriveCommand(
         SwerveSubsystem swerve,
@@ -47,10 +47,6 @@ public class AimAndDriveCommand extends Command {
         this.forwardInput = forwardInput;
         this.leftInput = leftInput;
         addRequirements(swerve);
-    }
-
-    public AimAndDriveCommand(SwerveSubsystem swerve) {
-        this(swerve, () -> 0, () -> 0);
     }
 
     public static Rotation2d getOperatorForwardDirection(SwerveSubsystem swerve) {
@@ -66,12 +62,7 @@ public class AimAndDriveCommand extends Command {
     }
 
     private Rotation2d getDirectionToHub() {
-        final Translation2d hubPosition = Landmarks.hubPosition();
-        final Translation2d robotPosition = swerve.getPose().getTranslation();
-        final Rotation2d hubDirectionInBlueAlliancePerspective = hubPosition.minus(robotPosition).getAngle();
-        final Rotation2d hubDirectionInOperatorPerspective = hubDirectionInBlueAlliancePerspective.rotateBy(
-            getOperatorForwardDirection(swerve));
-        return hubDirectionInOperatorPerspective;
+        return getDirectionToHub(swerve);
     }
 
     public static Rotation2d getDirectionToHub(SwerveSubsystem swerve) {
@@ -90,8 +81,8 @@ public class AimAndDriveCommand extends Command {
         
         swerve.aimAtRequest(
             fieldCentricFacingAngleRequest
-                .withVelocityX(Driving.kMaxSpeed.times(smoothedInput.get(0)))
-                .withVelocityY(Driving.kMaxSpeed.times(smoothedInput.get(1)))
+                .withVelocityX(FeetPerSecond.of(14.5).times(smoothedInput.get(0)))
+                .withVelocityY(FeetPerSecond.of(14.5).times(smoothedInput.get(1)))
                 .withTargetDirection(getDirectionToHub())
         );
     }

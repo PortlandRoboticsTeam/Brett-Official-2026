@@ -35,12 +35,6 @@ public final class Constants
 	public static final double MAX_SPEED  = Units.feetToMeters(14.5);
 	// Maximum speed of the robot in meters per second, used to limit acceleration.
 
-	public static class Driving {
-		public static final LinearVelocity kMaxSpeed = FeetPerSecond.of(14.5);
-        public static final AngularVelocity kMaxRotationalRate = RotationsPerSecond.of(2);
-        public static final AngularVelocity kPIDRotationDeadband = kMaxRotationalRate.times(0.005);
-	}
-
 	public static class KrakenX60 {
 		public static final AngularVelocity kFreeSpeed = RPM.of(6000);
 	}

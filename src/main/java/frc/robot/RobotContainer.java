@@ -149,7 +149,16 @@ public class RobotContainer{
 	
 	Command ToggleVisionDriving = mLemonLime.toggleVisionDriving();
 
-	SubsystemCommands subsystemCommands = new SubsystemCommands(drivebase, mIntake, mFloor, mFeeder, mShooter, mHood, mHanger);
+	SubsystemCommands subsystemCommands = new SubsystemCommands(
+		drivebase,
+		mIntake,
+		mFloor,
+		mFeeder,
+		mShooter,
+		mHood,
+		mHanger,
+		driveAdapter::getDriveY, 
+		driveAdapter::getDriveX);
 	Command aimAndShoot = subsystemCommands.aimAndShoot();
 	
 	public RobotContainer() {
