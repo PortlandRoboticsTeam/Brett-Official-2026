@@ -18,6 +18,6 @@ public class AutoCompiler {
 		SmartDashboard.putData("Auto Chooser", autoChooser);
 	}
 	public static Command compileWithChooser(){
-		return autoChooser.getSelected();
+		return AutoBuilder.buildAuto("Middle Shoot"); //autoChooser.getSelected();
 	}
 }
