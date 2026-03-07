@@ -36,6 +36,7 @@ public class Shooter extends SubsystemBase {
     private final VoltageOut voltageRequest = new VoltageOut(0);
 
     private double dashboardTargetRPM = 0.0;
+    private static final double DEFAULT_SHOOTER_RPM = 4000;
 
     public Shooter() {
         leftMotor = new TalonFX(Ports.kShooterLeft, Ports.kRoboRioCANBus);
@@ -101,9 +102,10 @@ public class Shooter extends SubsystemBase {
         setPercentOutput(0.0);
     }
 
-    /**
-     * Used to 
-     */
+    public Command spinUpToDefaultRpm() {
+        return spinUpCommand(DEFAULT_SHOOTER_RPM);
+    }
+
     public Command spinUpCommand(double rpm) {
         return runOnce(() -> setRPM(rpm))
             .andThen(Commands.waitUntil(this::isVelocityWithinTolerance));

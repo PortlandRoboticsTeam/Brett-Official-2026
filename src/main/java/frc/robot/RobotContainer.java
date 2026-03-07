@@ -11,13 +11,12 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
-import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard; 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.OperatorConstants;
-import frc.robot.commands.AimAndDriveCommand;
 import frc.robot.commands.PrepareShotCommand;
 import frc.robot.commands.SubsystemCommands;
 import frc.robot.subsystems.ControllerHandler;
@@ -103,48 +102,52 @@ public class RobotContainer{
 	// Command Stop_Firing		= mShooter.spinUpCommand(0).alongWith(mFloor.idle()).alongWith(mFeeder.idle()); // Stop Firing
 
 
-	Command Spool_Up		= mShooter.spinUpCommand(5000).raceWith(Commands.waitSeconds(5));
-	Command Spool_Down		= mShooter.spinUpCommand(0).raceWith(Commands.waitSeconds(10));
+	// Command Spool_Up		= mShooter.spinUpCommand(5000).raceWith(Commands.waitSeconds(5));
+	Command FH_Hopper_Aim   = PrepareShotCommand.aimTargetStaticCommand(mShooter,mHood,()->drivebase.getPose());
+	Command FH_Downrange    = PrepareShotCommand.aimDownrangeCommand(mShooter,mHood,()->drivebase.getPose());
+	Command Spool_Down		= PrepareShotCommand.haltCommand(mShooter,mHood,()->drivebase.getPose());
 	Command Feeder_Reverse  = mFloor.reverseCommand().alongWith(mFeeder.reverseCommand());
 	Command Feeder_Forward	= mFloor.feedCommand().alongWith(mFeeder.feedCommand());
 	Command Feeder_Stop		= mFloor.idle().alongWith(mFeeder.idle());
 
-	Command Launcher_Fire	= 
-		//prepare the hood with the default shooting position
-		PrepareShotCommand.defaultAim(mHood).alongWith(
+	// Command Launcher_Fire	= 
+	// 	//prepare the hood with the default shooting position
+	// 	PrepareShotCommand.defaultAim(mHood)
 
-		//initially reverse the feeder to prevent jamming of balls for 5 seconds
-		(mFloor.reverseCommand().alongWith(mFeeder.reverseCommand()))).raceWith(
-		Commands.waitSeconds(5))
+	// 	//spin the shooter up to the shooting RPM
+	// 	.alongWith(mShooter.spinUpToDefaultRpm())
 		
-		//run motors to push balls into the feeder
-		.andThen(mFloor.feedCommand().alongWith(mFeeder.feedCommand())).raceWith(
-		Commands.waitSeconds(1))
-		.andThen(mFloor.feedCommand().alongWith(mFeeder.feedCommand()));
+	// 	// //initially reverse the feeder to prevent jamming of balls
+	// 	.alongWith((
+	// 		mFloor.reverseCommand()
+	// 		.alongWith(mFeeder.reverseCommand())
+	// 		.andThen(mFloor.feedCommand())
+	// 		.alongWith(mFeeder.feedCommand())
+	// 	);
 								
-	Command Launcher_Stop	= 	mFloor.reverseCommand()
-								.andThen(
-									mFeeder.reverseCommand()
-								).raceWith(
-									Commands.none()
-								).andThen(
-									mShooter.spinUpCommand(0)
-								).andThen(
-									Commands.waitSeconds(2)
-								).andThen(
-									mFloor.idle()
-									.andThen(
-										mFeeder.idle()
-								));
+	// Command Launcher_Stop	= 	mFloor.reverseCommand()
+	// 							.andThen(
+	// 								mFeeder.reverseCommand()
+	// 							).raceWith(
+	// 								Commands.none()
+	// 							).andThen(
+	// 								mShooter.spinUpCommand(0)
+	// 							).andThen(
+	// 								Commands.waitSeconds(2)
+	// 							).andThen(
+	// 								mFloor.idle()
+	// 								.andThen(
+	// 									mFeeder.idle()
+	// 							));
 	Command Launcher_Unjam  = 	mFloor.reverseCommand()
 								.alongWith(
 									mFeeder.reverseCommand()
-								).alongWith(
-									mShooter.spinUpCommand(5000)
-									.raceWith( Commands.waitSeconds(.4) )
-									.andThen( mShooter.spinUpCommand(0   ) )
-									.raceWith( Commands.waitSeconds(.4) )
-									.repeatedly()
+								// ).alongWith(
+								// 	mShooter.spinUpCommand(5000)
+								// 	.raceWith( Commands.waitSeconds(.4) )
+								// 	.andThen( mShooter.spinUpCommand(0   ) )
+								// 	.raceWith( Commands.waitSeconds(.4) )
+								// 	.repeatedly()
 								);
 	
 	Command ToggleVisionDriving = mLemonLime.toggleVisionDriving();
@@ -210,12 +213,12 @@ public class RobotContainer{
 				()->(driveAdapter.getDriveR() + mLemonLime.getVisualJoyStick()),
 			false));//
 
-		driveAdapter.setFieldOriented(true);
+		driveAdapter.setFieldOriented(false);
 		// control.h_triangle().onTrue 					(Commands.runOnce(()->driveAdapter.setFieldOriented(true)));
 		// control.h_triangle().onFalse					(Commands.runOnce(()->driveAdapter.setFieldOriented(false)));
 
 		control.d_LSB().and(control.d_RSB()).onTrue		(Commands.runOnce(drivebase::lock).repeatedly());
-		control.d_square().onTrue						(Commands.runOnce(drivebase::zeroGyro));
+		// control.d_square().onTrue						(Commands.runOnce(drivebase::zeroGyro));
 		
 		/**
 		 * ----------------------------------------------------------
@@ -235,20 +238,23 @@ public class RobotContainer{
 		 * Fire control.
 		 * ----------------------------------------------------------
 		 */
-		control.h_R2().onTrue							(Launcher_Fire ); // Fire
-		control.h_R2().or(control.h_cross()).onFalse	(Launcher_Stop ); // Stop Firing
+		control.h_R2().onTrue							(FH_Hopper_Aim ); // Fire
+		control.h_R1().onTrue							(FH_Downrange ); // Fire
+		control.h_R2().or(control.h_R1()).onFalse		(Spool_Down   ); // Stop Firing
 		control.h_cross().onTrue						(Launcher_Unjam); // Backfeed
+		control.h_circle().onTrue						(Feeder_Forward); // Backfeed
+		control.h_circle().or(control.h_cross()).onFalse(Feeder_Stop); // Backfeed
 
 		/**
 		 * ----------------------------------------------------------
 		 * Auto-aim functionality, both direction and distance.
 		 * ----------------------------------------------------------
 		 */
-		control.d_R1().whileTrue(aimAndShoot);
+		// control.d_R1().whileTrue(aimAndShoot);
 		control.d_triangle().onTrue(Auto_Aim_Start);
 		control.d_triangle().onFalse(Auto_Aim_Stop);
-		control.d_circle().whileTrue(
-			PrepareShotCommand.aimWithDistanceToHub(mShooter, mHood, ()->drivebase.getPose()));
+		// control.d_circle().whileTrue(
+		// 	PrepareShotCommand.aimWithDistanceToHub(mShooter, mHood, ()->drivebase.getPose()));
 	} 
 
 	/**

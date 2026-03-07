@@ -57,9 +57,24 @@ public class PrepareShotCommand extends Command {
     }
 
     public static Command aimWithDistanceToHub(Shooter shooter, Hood hood, Supplier<Pose2d> robotPoseSupplier) {
-        return Commands.runOnce(() -> {
-            execute(shooter, hood, robotPoseSupplier);
-        });
+        return Commands.runOnce(
+            () -> {execute(shooter, hood, robotPoseSupplier);}
+        );
+    }
+    public static Command aimTargetStaticCommand(Shooter shooter, Hood hood, Supplier<Pose2d> robotPoseSupplier) {
+        return Commands.runOnce(
+            () -> {shooter.setRPM(2800); hood.setPosition(.19);}
+        );
+    }
+    public static Command aimDownrangeCommand(Shooter shooter, Hood hood, Supplier<Pose2d> robotPoseSupplier) {
+        return Commands.runOnce(
+            () -> {shooter.setRPM(3000); hood.setPosition(1);}
+        );
+    }
+    public static Command haltCommand(Shooter shooter, Hood hood, Supplier<Pose2d> robotPoseSupplier) {
+        return Commands.runOnce(
+            () -> {shooter.setRPM(0);}
+        );
     }
 
     public boolean isReadyToShoot() {
