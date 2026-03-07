@@ -7,7 +7,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "New Path"
+            "pathName": "Outside to shoot"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "SHoot to end"
           }
         }
       ]
