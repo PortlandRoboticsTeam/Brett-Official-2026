@@ -21,6 +21,7 @@ import frc.robot.subsystems.stock.LimelightHelpers;
 import frc.robot.subsystems.stock.SwerveSubsystem;
 import frc.robot.subsystems.stock.LimelightHelpers.PoseEstimate;
 import frc.robot.Constants;
+import frc.robot.commands.AimAndDriveCommand;
 
 public class LemonLime extends SubsystemBase {
 	private final SwerveSubsystem swerve;
@@ -73,12 +74,12 @@ public class LemonLime extends SubsystemBase {
 		}
 	}
 	
-	public Alliance getAlliance(){ return DriverStation.getAlliance().get(); }
+	public Alliance getAlliance(){ return DriverStation.getAlliance().orElse(Alliance.Red); }
 
 	private double clamp(double x, double a, double b){ return x<a ? a : x>b ? b : x; }
 
 	public Pose2d getTartetPose(){
-		return getAlliance()!=null && getAlliance().equals(Alliance.Red) ? 
+		return getAlliance().equals(Alliance.Red) ? 
 			new Pose2d(Inches.of(158.84), Inches.of(181.46), new Rotation2d(0)) : // Blue Hub (default)
 			new Pose2d(Inches.of(651.22-158.84), Inches.of(181.46), new Rotation2d(0)) ; // Red Hub
 	}
@@ -115,9 +116,9 @@ public class LemonLime extends SubsystemBase {
 	}
 
 	public double getVisualJoyStick(){
-		double n = clamp(driveStickPID.calculate(getAngleRequest().getDegrees()),-1,1);
-		double rps = pose.getRotation().minus(pose_p.getRotation()).times(50).getRotations();
-		return n/10;//-(!enabled ? 0 : (-.2<rps && rps<.2 && -.1<n && n<.1)   ?   -(Math.copySign(.2, n)+n)   :   n);
+		double n = clamp(driveStickPID.calculate(swerve.getHeading().getDegrees(),AimAndDriveCommand.getDirectionToHub(swerve).getDegrees()),-1,1);
+		n=Math.copySign(Math.abs(n)*.7+.3, n);
+		return enabled ? n : 0;
 
 	}
 	public DoubleSupplier getAutonInterceptRequest(){

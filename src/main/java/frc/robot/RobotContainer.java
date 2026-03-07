@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.AimAndDriveCommand;
+import frc.robot.commands.PrepareShotCommand;
 import frc.robot.commands.SubsystemCommands;
 import frc.robot.subsystems.ControllerHandler;
 import frc.robot.subsystems.DriveControllerAdapter;
@@ -106,10 +107,16 @@ public class RobotContainer{
 	Command Launcher_Fire	=  (mFloor.reverseCommand()
 								.alongWith(
 									mFeeder.reverseCommand()
-								).raceWith(
-									mShooter.spinUpCommand(5000)
+								// ).raceWith(
+								// 	mShooter.spinUpCommand(3000)
 								)).raceWith(
 									Commands.waitSeconds(5)
+								).andThen(
+									mFloor.feedCommand()
+									.alongWith(
+										mFeeder.feedCommand())
+								).raceWith(
+									Commands.waitSeconds(1)
 								).andThen(
 									mFloor.feedCommand()
 									.alongWith(
@@ -191,32 +198,33 @@ public class RobotContainer{
 		else
 			drivebase.setDefaultCommand(drivebase.driveCommand(driveAdapter::getDriveY, 
 			driveAdapter::getDriveX, 
-			// ()->(driveAdapter.getDriveR()+mLemonLime.getVisualJoyStick()), false));//
-			()->(driveAdapter.getDriveR()), false));//
+			()->(driveAdapter.getDriveR()+mLemonLime.getVisualJoyStick()), false));//
+			// ()->(driveAdapter.getDriveR()), false));//
 
 //  drivebase.driveToPose(new Pose2d(new Translation2d(4, 4), Rotation2d.fromDegrees(0));
 
-		control.d_R1().onTrue 							(Commands.runOnce(()->driveAdapter.setFieldOriented(true)));
-		control.d_R1().onFalse							(Commands.runOnce(()->driveAdapter.setFieldOriented(false)));
+		control.h_triangle().onTrue 					(Commands.runOnce(()->driveAdapter.setFieldOriented(true)));
+		control.h_triangle().onFalse					(Commands.runOnce(()->driveAdapter.setFieldOriented(false)));
 		control.d_LSB().and(control.d_RSB()).onTrue		(Commands.runOnce(drivebase::lock).repeatedly());
 		control.d_square().onTrue						(Commands.runOnce(drivebase::zeroGyro));
 
 		control.d_triangle().whileTrue(aimAndShoot);
 
-		// control.d_triangle().onTrue						(Auto_Aim_Start); // Auto-Aim
-		// control.d_triangle().onFalse					(Auto_Aim_Stop ); // Auto-Aim
+		control.d_R1().onTrue							(Auto_Aim_Start); // Auto-Aim
+		control.d_R1().onFalse							(Auto_Aim_Stop ); // Auto-Aim
 		
 		control.h_povUp().onTrue						(Intake_Open ); // Open & Activate Intake
 		control.h_povLeft().onTrue						(Intake_Halt ); // Open & Disable Intake
 		control.h_povDown().onTrue						(Intake_Close); // Close & Disable Intake
 		control.h_povRight().onTrue						(Intake_Pulse); // Pulse Intake (as adjetator)
 		control.h_menu().onTrue							(Calibrate); // zero the intake via the limit switch
-		control.h_L2().onTrue							(Climber_Up  .andThen(Commands.print(">> Up"))); // Extend Climber
-		control.h_L2().onFalse							(Climber_Down.andThen(Commands.print(">> Down"))); // Retract Climber
+		// control.h_L2().onTrue							(Climber_Up  .andThen(Commands.print(">> Up"))); // Extend Climber
+		// control.h_L2().onFalse							(Climber_Down.andThen(Commands.print(">> Down"))); // Retract Climber
 
 		control.h_R2().onTrue							(Launcher_Fire ); // Fire
 		control.h_R2().or(control.h_cross()).onFalse	(Launcher_Stop ); // Stop Firing
 		control.h_cross().onTrue						(Launcher_Unjam); // Backfeed
+		control.d_circle().whileTrue(PrepareShotCommand.aimWithDistanceToHub(mShooter, mHood, ()->drivebase.getPose()));
 	} 
 
 	/**
@@ -227,6 +235,7 @@ public class RobotContainer{
 	public Command getAutonomousCommand() {
 		// Pass in the selected auto from the SmartDashboard as our desired autnomous
 		// commmand
+
 		return autoChooser.getSelected();
 	}
 

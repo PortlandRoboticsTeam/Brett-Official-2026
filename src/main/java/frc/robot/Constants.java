@@ -37,7 +37,7 @@ public final class Constants
 
 	public static class Driving {
 		public static final LinearVelocity kMaxSpeed = FeetPerSecond.of(14.5);
-        public static final AngularVelocity kMaxRotationalRate = RotationsPerSecond.of(1);
+        public static final AngularVelocity kMaxRotationalRate = RotationsPerSecond.of(2);
         public static final AngularVelocity kPIDRotationDeadband = kMaxRotationalRate.times(0.005);
 	}
 

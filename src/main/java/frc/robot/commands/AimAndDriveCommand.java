@@ -22,7 +22,7 @@ import frc.robot.subsystems.stock.SwerveSubsystem;
 import frc.robot.subsystems.wcp.Landmarks;
 
 public class AimAndDriveCommand extends Command {
-    private static final Angle kAimTolerance = Degrees.of(5);
+    private static final Angle kAimTolerance = Degrees.of(0.5);
 
     private final SwerveSubsystem swerve;
     private final DoubleSupplier forwardInput;
@@ -35,7 +35,8 @@ public class AimAndDriveCommand extends Command {
         .withDriveRequestType(DriveRequestType.OpenLoopVoltage)
         .withSteerRequestType(SteerRequestType.MotionMagicExpo)
         .withForwardPerspective(ForwardPerspectiveValue.OperatorPerspective)
-        .withHeadingPID(5, 0, 0);
+        .withHeadingPID(50, 0, 2)
+        ;
 
     public AimAndDriveCommand(
         SwerveSubsystem swerve,
@@ -52,7 +53,7 @@ public class AimAndDriveCommand extends Command {
         this(swerve, () -> 0, () -> 0);
     }
 
-    public Rotation2d getOperatorForwardDirection(SwerveSubsystem swerve) {
+    public static Rotation2d getOperatorForwardDirection(SwerveSubsystem swerve) {
         return swerve.isRedAlliance() ? Rotation2d.fromDegrees(0) : Rotation2d.fromDegrees(180);
     }
 
@@ -65,6 +66,15 @@ public class AimAndDriveCommand extends Command {
     }
 
     private Rotation2d getDirectionToHub() {
+        final Translation2d hubPosition = Landmarks.hubPosition();
+        final Translation2d robotPosition = swerve.getPose().getTranslation();
+        final Rotation2d hubDirectionInBlueAlliancePerspective = hubPosition.minus(robotPosition).getAngle();
+        final Rotation2d hubDirectionInOperatorPerspective = hubDirectionInBlueAlliancePerspective.rotateBy(
+            getOperatorForwardDirection(swerve));
+        return hubDirectionInOperatorPerspective;
+    }
+
+    public static Rotation2d getDirectionToHub(SwerveSubsystem swerve) {
         final Translation2d hubPosition = Landmarks.hubPosition();
         final Translation2d robotPosition = swerve.getPose().getTranslation();
         final Rotation2d hubDirectionInBlueAlliancePerspective = hubPosition.minus(robotPosition).getAngle();

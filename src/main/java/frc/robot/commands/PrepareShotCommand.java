@@ -13,6 +13,7 @@ import edu.wpi.first.math.interpolation.InverseInterpolator;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.subsystems.wcp.Hood;
 import frc.robot.subsystems.wcp.Landmarks;
 import frc.robot.subsystems.wcp.Shooter;
@@ -48,8 +49,24 @@ public class PrepareShotCommand extends Command {
         addRequirements(shooter, hood);
     }
 
+    public static Command aimWithDistanceToHub(Shooter shooter, Hood hood, Supplier<Pose2d> robotPoseSupplier) {
+        return Commands.runOnce(() -> {
+            final Distance distanceToHub = getDistanceToHub(robotPoseSupplier);
+            final Shot shot = distanceToShotMap.get(distanceToHub);
+            shooter.setRPM(shot.shooterRPM+95);
+            hood.setPosition(shot.hoodPosition);
+            SmartDashboard.putNumber("Distance to Hub (inches)", distanceToHub.in(Inches));
+        });
+    }
+
     public boolean isReadyToShoot() {
         return shooter.isVelocityWithinTolerance() && hood.isPositionWithinTolerance();
+    }
+
+    private static Distance getDistanceToHub(Supplier<Pose2d> robotPoseSupplier) {
+        final Translation2d robotPosition = robotPoseSupplier.get().getTranslation();
+        final Translation2d hubPosition = Landmarks.hubPosition();
+        return Meters.of(robotPosition.getDistance(hubPosition));
     }
 
     private Distance getDistanceToHub() {
