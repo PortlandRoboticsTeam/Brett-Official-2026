@@ -164,7 +164,7 @@ public class RobotContainer{
 		NamedCommands.registerCommand("Placeholder Command II", Commands.print(" <!> Placeholder Command II Triggered"));
 		NamedCommands.registerCommand("Start Auto-Aim",Auto_Aim_Start);
 		NamedCommands.registerCommand("Stop Auto-Aim",Auto_Aim_Stop);
-		NamedCommands.registerCommand("Open & Activate Intake",Intake_Start);
+		NamedCommands.registerCommand("Open & Activate Intake",Intake_Open);
 		NamedCommands.registerCommand("Open & Disable Intake",Intake_Halt);
 		NamedCommands.registerCommand("Close & Disable Intake",Intake_Close);
 		NamedCommands.registerCommand("Pulse Intake (as adjetator)",Intake_Pulse);
@@ -213,7 +213,7 @@ public class RobotContainer{
 		// control.d_R1().onTrue							(Auto_Aim_Start); // Auto-Aim
 		// control.d_R1().onFalse							(Auto_Aim_Stop ); // Auto-Aim
 		
-		control.h_povUp().onTrue						(Intake_Start ); // Open & Activate Intake
+		control.h_povUp().onTrue						(Intake_Open ); // Open & Activate Intake
 		control.h_povLeft().onTrue						(Intake_Halt ); // Open & Disable Intake
 		control.h_povDown().onTrue						(Intake_Close); // Close & Disable Intake
 		control.h_povRight().onTrue						(Intake_Pulse); // Pulse Intake (as adjetator)
