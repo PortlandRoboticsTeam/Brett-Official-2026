@@ -15,6 +15,12 @@
           "data": {
             "pathName": "Shoot to end rmp"
           }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Spool Up for Hopper"
+          }
         }
       ]
     }

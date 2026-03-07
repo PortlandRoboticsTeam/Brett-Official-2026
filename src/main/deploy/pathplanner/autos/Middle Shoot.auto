@@ -11,6 +11,42 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "Spool Up for Hopper"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 1.0
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Feeder Forward"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 7.0
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Spool Down"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Feeder Stop"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "Shoot to end rmp"
