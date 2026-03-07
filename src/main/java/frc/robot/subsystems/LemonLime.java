@@ -29,7 +29,7 @@ public class LemonLime extends SubsystemBase {
 
 	private final SwerveSubsystem swerve;
 	private boolean enabled = false;
-	private final PIDController driveStickPID = new PIDController(.04, .002, .02);
+	private final PIDController driveStickPID = new PIDController(.02, 0, .02);
 	private Pose2d 	pose_p	= new Pose2d(), 
 					pose	= new Pose2d();
 
@@ -119,8 +119,9 @@ public class LemonLime extends SubsystemBase {
 	}
 
 	public double getVisualJoyStick(){
-		double n = clamp(driveStickPID.calculate(swerve.getHeading().getDegrees(),AimAndDriveCommand.getDirectionToHub(swerve).getDegrees()),-1,1);
-		n=Math.copySign(Math.abs(n)*.7+.3, n);
+		// double n = clamp(driveStickPID.calculate(swerve.getHeading().getDegrees(),AimAndDriveCommand.getDirectionToHub(swerve).getDegrees()),-1,1);
+		double n = -clamp(driveStickPID.calculate(getAngularOffset().getDegrees()),-1,1);
+		n=Math.copySign(Math.abs(n)*.7+.2, n);
 		return enabled ? n : 0;
 
 	}
