@@ -35,7 +35,7 @@ public class AimAndDriveCommand extends Command {
         .withDriveRequestType(DriveRequestType.OpenLoopVoltage)
         .withSteerRequestType(SteerRequestType.MotionMagicExpo)
         .withForwardPerspective(ForwardPerspectiveValue.OperatorPerspective)
-        .withHeadingPID(50, 0, 2)
+        .withHeadingPID(120, 0, 0)
         ;
 
     public AimAndDriveCommand(

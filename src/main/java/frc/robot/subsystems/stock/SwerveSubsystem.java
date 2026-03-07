@@ -268,39 +268,39 @@ public class SwerveSubsystem extends SubsystemBase
     });
   }
 
-  //public void aimAtRequest(SwerveRequest.FieldCentricFacingAngle request) {
-   // if (request == null) return;
-
-    //Rotation2d target = request.TargetDirection;
-    // double robotRelativeOmega = target.minus(getHeading()).getRadians();   #commented out this for test 3/6 -CC
-
-  //  swerveDrive.drive(
-  //    new Translation2d(0, 0),
-  //   robotRelativeOmega,
-  //   false,
-  //    false
-  //  );
-  //  }
-    
-  private final PIDController headingPID = new PIDController(0.28, 0.0, 0.06);  //this is for PID of auto aim
-
   public void aimAtRequest(SwerveRequest.FieldCentricFacingAngle request) {
-      Rotation2d target = request.TargetDirection;
-      double error = target.minus(getHeading()).getRadians();
+    if (request == null) return; 
 
-      double omega = -headingPID.calculate(getHeading().getRadians(), target.getRadians());
+    Rotation2d target = request.TargetDirection;
+     double robotRelativeOmega = target.minus(getHeading()).getRadians();
 
-      if (Math.abs(error) < Math.toRadians(2)) {
-        omega = 0;
-      }
+    swerveDrive.drive(
+      new Translation2d(0, 0),
+     robotRelativeOmega,
+     false,
+      false
+    );
+    }
+    
+  //private final PIDController headingPID = new PIDController(0.28, 0.0, 0.06);  //this is for PID of auto aim
 
-      swerveDrive.drive(
-          new Translation2d(0, 0),
-          omega,
-          false,
-          false
-      );
-  }
+  //public void aimAtRequest(SwerveRequest.FieldCentricFacingAngle request) {
+      //Rotation2d target = request.TargetDirection;
+      //double error = target.minus(getHeading()).getRadians();
+
+      //double omega = -headingPID.calculate(getHeading().getRadians(), target.getRadians());
+
+      //if (Math.abs(error) < Math.toRadians(2)) {
+        //omega = 0;
+      //}
+
+      //swerveDrive.drive(
+          //new Translation2d(0, 0),
+          //omega,
+          //false,
+          //false
+      //);
+  //}
 
   /**
    * Get the path follower with events.

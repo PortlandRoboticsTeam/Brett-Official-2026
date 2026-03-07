@@ -92,7 +92,7 @@ public class RobotContainer{
 	Command Intake_Halt		= mIntake.haltCommand();
 	Command Intake_Close	= mIntake.closeCommand();
 	Command Intake_Pulse	= mIntake.agitateCommand();
-	Command Calibrate		= mIntake.calibrateCommand().alongWith(mHanger.homingCommand());
+	Command Calibrate		= mIntake.calibrateCommand();//.alongWith(mHanger.homingCommand());
 	Command Climber_Up		= mHanger.positionCommand(Hanger.Position.HANGING);
 	Command Climber_Down	= mHanger.positionCommand(Hanger.Position.HUNG);
 	// Command Fire			= mShooter.spinUpCommand(5000).raceWith(Commands.waitSeconds(5)).andThen(mFloor.feedCommand().alongWith(mFeeder.feedCommand())); // Fire
@@ -198,20 +198,20 @@ public class RobotContainer{
 		else
 			drivebase.setDefaultCommand(drivebase.driveCommand(driveAdapter::getDriveY, 
 			driveAdapter::getDriveX, 
-			()->(driveAdapter.getDriveR()+mLemonLime.getVisualJoyStick()), false));//
-			// ()->(driveAdapter.getDriveR()), false));//
+			// ()->(driveAdapter.getDriveR()+mLemonLime.getVisualJoyStick()), false));//
+			()->(driveAdapter.getDriveR()), false));//
 
 //  drivebase.driveToPose(new Pose2d(new Translation2d(4, 4), Rotation2d.fromDegrees(0));
-
-		control.h_triangle().onTrue 					(Commands.runOnce(()->driveAdapter.setFieldOriented(true)));
-		control.h_triangle().onFalse					(Commands.runOnce(()->driveAdapter.setFieldOriented(false)));
+		driveAdapter.setFieldOriented(true);
+		// control.h_triangle().onTrue 					(Commands.runOnce(()->driveAdapter.setFieldOriented(true)));
+		// control.h_triangle().onFalse					(Commands.runOnce(()->driveAdapter.setFieldOriented(false)));
 		control.d_LSB().and(control.d_RSB()).onTrue		(Commands.runOnce(drivebase::lock).repeatedly());
 		control.d_square().onTrue						(Commands.runOnce(drivebase::zeroGyro));
 
-		control.d_triangle().whileTrue(aimAndShoot);
+		control.d_R1().whileTrue(aimAndShoot);
 
-		control.d_R1().onTrue							(Auto_Aim_Start); // Auto-Aim
-		control.d_R1().onFalse							(Auto_Aim_Stop ); // Auto-Aim
+		// control.d_R1().onTrue							(Auto_Aim_Start); // Auto-Aim
+		// control.d_R1().onFalse							(Auto_Aim_Stop ); // Auto-Aim
 		
 		control.h_povUp().onTrue						(Intake_Open ); // Open & Activate Intake
 		control.h_povLeft().onTrue						(Intake_Halt ); // Open & Disable Intake
