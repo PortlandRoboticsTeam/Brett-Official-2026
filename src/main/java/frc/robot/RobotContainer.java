@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.PrepareShotCommand;
 import frc.robot.commands.SubsystemCommands;
+import frc.robot.subsystems.AutoCompiler;
 import frc.robot.subsystems.ControllerHandler;
 import frc.robot.subsystems.DriveControllerAdapter;
 import frc.robot.subsystems.LemonLime;
@@ -47,10 +48,6 @@ public class RobotContainer{
 	private final Limelight	mLimelight	 = new Limelight(Constants.Ports.FORWARD_LIMELIGHT);
 	private final LemonLime mLemonLime   = new LemonLime(drivebase);
 	private final Shooter	mShooter	 = new Shooter();
-
-	// Establish a Sendable Chooser that will be able to be sent to the
-	// SmartDashboard, allowing selection of desired auto
-	private final SendableChooser<Command> autoChooser;
 
 	// Converts driver input into a field-relative ChassisSpeeds that is controlled
 	// by angular velocity.
@@ -91,9 +88,9 @@ public class RobotContainer{
 	Command Intake_Halt		= mIntake.haltCommand();
 	Command Intake_Close	= mIntake.closeCommand();
 	Command Intake_Pulse	= mIntake.agitateCommand();
-	Command Calibrate		= mIntake.calibrateCommand();//.alongWith(mHanger.homingCommand());
-	Command Climber_Up		= mHanger.positionCommand(Hanger.Position.HANGING);
-	Command Climber_Down	= mHanger.positionCommand(Hanger.Position.HUNG);
+	Command Intake_Calibrate= mIntake.calibrateCommand();//.alongWith(mHanger.homingCommand());
+	Command Climber_Down	= Commands.none();//mHanger.positionCommand(Hanger.Position.HUNG);
+	Command Climber_Up		= Commands.none();//mHanger.positionCommand(Hanger.Position.HANGING);
 
 
 	// Command Fire			= mShooter.spinUpCommand(5000).raceWith(Commands.waitSeconds(5)).andThen(mFloor.feedCommand().alongWith(mFeeder.feedCommand())); // Fire
@@ -170,6 +167,9 @@ public class RobotContainer{
 		driveAdapter.setVehicleYawSupplier(()->drivebase.getHeading().getRadians());
 		DriverStation.silenceJoystickConnectionWarning(true);
 		drivebase.resetOdometry(new Pose2d(Inches.of(158.84), Inches.of(181.46-143),new Rotation2d(Degrees.of(90))));
+
+		AutoCompiler.SetUpCompiler(drivebase);
+		driveAdapter.setFieldOriented(false);
 		
 		//Create the NamedCommands that will be used in PathPlanner
 		NamedCommands.registerCommand("Placeholder Command", Commands.print(" <!> Placeholder Command Triggered"));
@@ -180,21 +180,10 @@ public class RobotContainer{
 		NamedCommands.registerCommand("Open & Disable Intake",Intake_Halt);
 		NamedCommands.registerCommand("Close & Disable Intake",Intake_Close);
 		NamedCommands.registerCommand("Pulse Intake (as adjetator)",Intake_Pulse);
-		NamedCommands.registerCommand("Calibrate Intake",Calibrate);
+		NamedCommands.registerCommand("Calibrate Intake",Intake_Calibrate);
 		NamedCommands.registerCommand("Extend Climber",Climber_Up);
 		NamedCommands.registerCommand("Retract Climber",Climber_Down);
-		// NamedCommands.registerCommand("Begin Firing",Fire);
-		// NamedCommands.registerCommand("Stop Firing",Stop_Firing);
 
-
-		//Have the autoChooser pull in all PathPlanner autos as options
-		autoChooser = AutoBuilder.buildAutoChooser();
-		autoChooser.setDefaultOption("Do Nothing", Commands.none());
-		autoChooser.addOption("Drive Forward", drivebase.driveForward().withTimeout(1));
-		
-		
-		//Put the autoChooser on the SmartDashboard
-		SmartDashboard.putData("Auto Chooser", autoChooser);
 	}
 
 	private void configureBindings() {
@@ -213,12 +202,7 @@ public class RobotContainer{
 				()->(driveAdapter.getDriveR() + mLemonLime.getVisualJoyStick()),
 			false));//
 
-		driveAdapter.setFieldOriented(false);
-		// control.h_triangle().onTrue 					(Commands.runOnce(()->driveAdapter.setFieldOriented(true)));
-		// control.h_triangle().onFalse					(Commands.runOnce(()->driveAdapter.setFieldOriented(false)));
-
 		control.d_LSB().and(control.d_RSB()).onTrue		(Commands.runOnce(drivebase::lock).repeatedly());
-		// control.d_square().onTrue						(Commands.runOnce(drivebase::zeroGyro));
 		
 		/**
 		 * ----------------------------------------------------------
@@ -229,9 +213,7 @@ public class RobotContainer{
 		control.h_povLeft().onTrue						(Intake_Halt ); // Open & Disable Intake
 		control.h_povDown().onTrue						(Intake_Close); // Close & Disable Intake
 		control.h_povRight().onTrue						(Intake_Pulse); // Pulse Intake (as adjetator)
-		control.h_menu().onTrue							(Calibrate); // zero the intake via the limit switch
-		// control.h_L2().onTrue							(Climber_Up  .andThen(Commands.print(">> Up"))); // Extend Climber
-		// control.h_L2().onFalse							(Climber_Down.andThen(Commands.print(">> Down"))); // Retract Climber
+		control.h_menu().onTrue							(Intake_Calibrate); // zero the intake via the limit switch
 
 		/**
 		 * ----------------------------------------------------------
@@ -250,11 +232,8 @@ public class RobotContainer{
 		 * Auto-aim functionality, both direction and distance.
 		 * ----------------------------------------------------------
 		 */
-		// control.d_R1().whileTrue(aimAndShoot);
 		control.d_triangle().onTrue(Auto_Aim_Start);
 		control.d_triangle().onFalse(Auto_Aim_Stop);
-		// control.d_circle().whileTrue(
-		// 	PrepareShotCommand.aimWithDistanceToHub(mShooter, mHood, ()->drivebase.getPose()));
 	} 
 
 	/**
@@ -263,10 +242,7 @@ public class RobotContainer{
 	 * @return the command to run in autonomous
 	 */
 	public Command getAutonomousCommand() {
-		// Pass in the selected auto from the SmartDashboard as our desired autnomous
-		// commmand
-
-		return autoChooser.getSelected();
+		return AutoCompiler.compileWithChooser();
 	}
 
 	public void setMotorBrake(boolean brake) {
