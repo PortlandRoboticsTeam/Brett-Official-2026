@@ -173,6 +173,7 @@ public class Intake extends SubsystemBase {
 	public Command intakeCommand() {
 		return runOnce(() -> {
 			set(Speed.INTAKE);
+			set(Position.INTAKE);
 		});
 	}
 

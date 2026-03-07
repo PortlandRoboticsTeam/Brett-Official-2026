@@ -6,6 +6,7 @@ package frc.robot.subsystems.stock;
 
 import static edu.wpi.first.units.Units.Meter;
 
+import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.commands.PathfindingCommand;
@@ -17,6 +18,8 @@ import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.DriveFeedforwards;
 import com.pathplanner.lib.util.swerve.SwerveSetpoint;
 import com.pathplanner.lib.util.swerve.SwerveSetpointGenerator;
+
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -263,6 +266,40 @@ public class SwerveSubsystem extends SubsystemBase
         }
       }
     });
+  }
+
+  //public void aimAtRequest(SwerveRequest.FieldCentricFacingAngle request) {
+   // if (request == null) return;
+
+    //Rotation2d target = request.TargetDirection;
+    // double robotRelativeOmega = target.minus(getHeading()).getRadians();   #commented out this for test 3/6 -CC
+
+  //  swerveDrive.drive(
+  //    new Translation2d(0, 0),
+  //   robotRelativeOmega,
+  //   false,
+  //    false
+  //  );
+  //  }
+    
+  private final PIDController headingPID = new PIDController(0.28, 0.0, 0.06);  //this is for PID of auto aim
+
+  public void aimAtRequest(SwerveRequest.FieldCentricFacingAngle request) {
+      Rotation2d target = request.TargetDirection;
+      double error = target.minus(getHeading()).getRadians();
+
+      double omega = -headingPID.calculate(getHeading().getRadians(), target.getRadians());
+
+      if (Math.abs(error) < Math.toRadians(2)) {
+        omega = 0;
+      }
+
+      swerveDrive.drive(
+          new Translation2d(0, 0),
+          omega,
+          false,
+          false
+      );
   }
 
   /**
@@ -590,7 +627,7 @@ public class SwerveSubsystem extends SubsystemBase
    *
    * @return true if the red alliance, false if blue. Defaults to false if none is available.
    */
-  private boolean isRedAlliance()
+  public boolean isRedAlliance()
   {
     var alliance = DriverStation.getAlliance();
     return alliance.isPresent() ? alliance.get() == DriverStation.Alliance.Red : false;

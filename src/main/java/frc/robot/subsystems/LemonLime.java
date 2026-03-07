@@ -1,22 +1,17 @@
 package frc.robot.subsystems;
 
-import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.Inches;
+import static edu.wpi.first.units.Units.Meters;
 
-import java.util.Optional;
-import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
-import edu.wpi.first.math.Matrix;
-import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.numbers.N1;
-import edu.wpi.first.math.numbers.N3;
-import edu.wpi.first.networktables.NetworkTable;
-import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.networktables.StructPublisher;
-import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.math.geometry.Transform2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -26,72 +21,109 @@ import frc.robot.subsystems.stock.LimelightHelpers;
 import frc.robot.subsystems.stock.SwerveSubsystem;
 import frc.robot.subsystems.wcp.Limelight;
 import frc.robot.subsystems.stock.LimelightHelpers.PoseEstimate;
+import frc.robot.Constants;
+import frc.robot.commands.AimAndDriveCommand;
 
 public class LemonLime extends SubsystemBase {
 	private static final String LIMELIGHT_NAME = "limelight";
 
 	private final SwerveSubsystem swerve;
 	private boolean enabled = false;
-    private final NetworkTable telemetryTable;
-    private final StructPublisher<Pose2d> posePublisher;
-
+	private final PIDController driveStickPID = new PIDController(.04, .002, .02);
+	private Pose2d 	pose_p	= new Pose2d(), 
+					pose	= new Pose2d();
 
 	public LemonLime(SwerveSubsystem drivebase) {
 		swerve = drivebase;
+		driveStickPID.reset();
 		swerve.attachAutonSteeringIntercept(()->enabled,getAutonInterceptRequest());
-		this.telemetryTable = NetworkTableInstance.getDefault().getTable("SmartDashboard/" + LIMELIGHT_NAME);
-        this.posePublisher = telemetryTable.getStructTopic("Estimated Robot Pose", Pose2d.struct).publish();
+		driveStickPID.enableContinuousInput(-180, 180);
 	}
 
-	public Command toggleVisionDriving() {
-		return runOnce(() -> setEnabled(!this.enabled));
-	}
+	public Command toggleVisionDriving() {return runOnce(() -> setEnabled(!this.enabled));}
+	public Command getEnableCommand   () {return runOnce(() -> setEnabled(true  ));}
+	public Command getDisableCommand  () {return runOnce(() -> setEnabled(false ));}
 
-	public void setEnabled(boolean enable) {
-		this.enabled = enable;
-	}
-
+	public void setEnabled(boolean enable) { this.enabled = enable; }
+	
 	public boolean getEnabled(){ return enabled; }
 
 	@Override
 	public void periodic() {
-		if(enabled){
-			final Pose2d currentRobotPose = swerve.getPose();
-            final Optional<Measurement> measurement = getMeasurement(currentRobotPose);
-            measurement.ifPresent(m -> {
-                swerve.getSwerveDrive().addVisionMeasurement(
-                    m.poseEstimate.pose, 
-                    m.poseEstimate.timestampSeconds,
-                    m.standardDeviations
-                );
-            });
-		}
 		SmartDashboard.putNumber("Lemon Angle", getAngularOffset().getDegrees());
-		SmartDashboard.putNumber("Lemon Joystict", getVisualJoyStick());
+		SmartDashboard.putNumber("Lemon Joystick", getVisualJoyStick());
 		SmartDashboard.putString("Lemon Coords", swerve.getPose().getX()+", "+swerve.getPose().getY());
+
+		ChassisSpeeds velo = swerve.getRobotVelocity();
+		pose=swerve.getPose();
+
+		PoseEstimate[] p = {
+			LimelightHelpers.getBotPoseEstimate_wpiBlue(Constants.Ports.FORWARD_LIMELIGHT),
+			LimelightHelpers.getBotPoseEstimate_wpiRed(Constants.Ports.FORWARD_LIMELIGHT),
+			LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(Constants.Ports.FORWARD_LIMELIGHT),
+			LimelightHelpers.getBotPoseEstimate_wpiRed_MegaTag2(Constants.Ports.FORWARD_LIMELIGHT)
+		};
+
+		for(int i=0; i<4; i++){
+			SmartDashboard.putString("Megatag Read "+i,
+				"is MT2: "+p[i].isMegaTag2+
+				";\nPose: "+p[i].pose.toString()+
+				";\nArea: "+p[i].avgTagArea+
+				";\nDist: "+p[i].avgTagDist+
+				";\nCount: "+p[i].tagCount+
+				";\nLatency: "+p[i].latency+
+				";\n2str: "+p[i].toString()
+			);
+		}
 	}
 	
-	public Alliance getAlliance(){ return DriverStation.getAlliance().get(); }
+	public Alliance getAlliance(){ return DriverStation.getAlliance().orElse(Alliance.Red); }
 
-	private double clamp(double x, double a, double b){
-		return x<a ? a : x>b ? b : x;
+	private double clamp(double x, double a, double b){ return x<a ? a : x>b ? b : x; }
+
+	public Pose2d getTartetPose(){
+		return getAlliance().equals(Alliance.Red) ? 
+			new Pose2d(Inches.of(158.84), Inches.of(181.46), new Rotation2d(0)) : // Blue Hub (default)
+			new Pose2d(Inches.of(651.22-158.84), Inches.of(181.46), new Rotation2d(0)) ; // Red Hub
 	}
 
 	public Rotation2d getAngularOffset(){
-		Pose2d target = getAlliance()!=null && getAlliance().equals(Alliance.Red) ? 
-			new Pose2d(Inches.of(651.22-158.84), Inches.of(181.46), new Rotation2d(0)) : // Red Hub (default)
-			new Pose2d(Inches.of(158.84), Inches.of(181.46), new Rotation2d(0)) ; // Blue Hub
+		return getTartetPose().relativeTo(pose).getTranslation().getAngle();
+	}
 
-		Pose2d self = swerve.getPose();
-		target = target.relativeTo(self);
+	// public Distance getRangeRequest(){
+	// 	// if(!enabled) return Meters.of(1);
+	// 	ChassisSpeeds velo = swerve.getFieldVelocity();
+	// 	Transform2d dx = new Pose2d(new Translation2d(velo.vxMetersPerSecond,velo.vyMetersPerSecond),new Rotation2d());
+	// 	Rotation2d da = pose.getRotation().minus(pose_p.getRotation()).times(-50);
 
-		return target.getTranslation().getAngle();
+	// 	Pose2d rel = getTartetPose().relativeTo(swerve.getPose())
+	// 					.rotateAround(new Translation2d(), da)
+	// 					.plus(dx);
+	// 	double d = rel.getTranslation().getNorm();
+	// 	return Meters.of( d<1 ? 1 : d );
+	// }
+
+	public Rotation2d getAngleRequest(){
+		// if(!enabled) return new Rotation2d();
+		Transform2d dx = pose.minus(pose_p).times(-50);
+		Rotation2d da = pose.getRotation().minus(pose_p.getRotation()).times(-50);
+
+		Pose2d rel = getTartetPose()
+						.relativeTo(pose)
+						.rotateAround(new Translation2d(), da)
+						.plus(dx);
+		
+		double d = rel.getTranslation().getNorm();
+		return d<1 ? new Rotation2d() : rel.getTranslation().getAngle();
 	}
 
 	public double getVisualJoyStick(){
-		return clamp(getAngularOffset().times(-.5).getTan(), -.1, .1);
-	}
+		double n = clamp(driveStickPID.calculate(swerve.getHeading().getDegrees(),AimAndDriveCommand.getDirectionToHub(swerve).getDegrees()),-1,1);
+		n=Math.copySign(Math.abs(n)*.7+.3, n);
+		return enabled ? n : 0;
 
+	}
 	public DoubleSupplier getAutonInterceptRequest(){
 		return ()->0.0; // this is in RPS
 	}

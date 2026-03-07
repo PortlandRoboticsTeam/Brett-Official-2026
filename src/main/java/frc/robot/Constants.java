@@ -9,8 +9,13 @@ import com.pathplanner.lib.config.PIDConstants;
 
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.util.Units;
+
+import static edu.wpi.first.units.Units.FeetPerSecond;
 import static edu.wpi.first.units.Units.RPM;
+import static edu.wpi.first.units.Units.RotationsPerSecond;
+
 import edu.wpi.first.units.measure.AngularVelocity;
+import edu.wpi.first.units.measure.LinearVelocity;
 import swervelib.math.Matter;
 
 /**
@@ -29,6 +34,13 @@ public final class Constants
 	public static final double LOOP_TIME  = 0.13; //s, 20ms + 110ms sprk max velocity lag
 	public static final double MAX_SPEED  = Units.feetToMeters(14.5);
 	// Maximum speed of the robot in meters per second, used to limit acceleration.
+
+	public static class Driving {
+		public static final LinearVelocity kMaxSpeed = FeetPerSecond.of(14.5);
+        public static final AngularVelocity kMaxRotationalRate = RotationsPerSecond.of(2);
+        public static final AngularVelocity kPIDRotationDeadband = kMaxRotationalRate.times(0.005);
+	}
+
 	public static class KrakenX60 {
 		public static final AngularVelocity kFreeSpeed = RPM.of(6000);
 	}
@@ -90,5 +102,6 @@ public final class Constants
 		public static final int kHoodRightServo = 9;
 
 		public static final int kIntakeLimitSwitch = 0;
+        public static final String FORWARD_LIMELIGHT = "limelight-front";
 	}
 }
