@@ -32,6 +32,9 @@ public class PrepareShotCommand extends Command {
             )
     );
 
+    private static final double RPM_ADJUSTMENT = 95;
+    public static final double STATIC_HOOD_POSITION = .19;
+
     static {
         distanceToShotMap.put(Inches.of(52.0), new Shot(2800, 0.19));
         distanceToShotMap.put(Inches.of(114.4), new Shot(3275, 0.40));
@@ -49,13 +52,13 @@ public class PrepareShotCommand extends Command {
         addRequirements(shooter, hood);
     }
 
+    public static Command defaultAim(Hood hood) {
+        return Commands.runOnce(() -> hood.setPosition(STATIC_HOOD_POSITION));
+    }
+
     public static Command aimWithDistanceToHub(Shooter shooter, Hood hood, Supplier<Pose2d> robotPoseSupplier) {
         return Commands.runOnce(() -> {
-            final Distance distanceToHub = getDistanceToHub(robotPoseSupplier);
-            final Shot shot = distanceToShotMap.get(distanceToHub);
-            shooter.setRPM(shot.shooterRPM+95);
-            hood.setPosition(shot.hoodPosition);
-            SmartDashboard.putNumber("Distance to Hub (inches)", distanceToHub.in(Inches));
+            execute(shooter, hood, robotPoseSupplier);
         });
     }
 
@@ -68,19 +71,20 @@ public class PrepareShotCommand extends Command {
         final Translation2d hubPosition = Landmarks.hubPosition();
         return Meters.of(robotPosition.getDistance(hubPosition));
     }
-
-    private Distance getDistanceToHub() {
-        final Translation2d robotPosition = robotPoseSupplier.get().getTranslation();
-        final Translation2d hubPosition = Landmarks.hubPosition();
-        return Meters.of(robotPosition.getDistance(hubPosition));
-    }
-
+    
     @Override
     public void execute() {
-        final Distance distanceToHub = getDistanceToHub();
+        execute(shooter, hood, robotPoseSupplier);
+    }
+
+    public static void execute(Shooter shooter, Hood hood, Supplier<Pose2d> robotPoseSupplier) {
+        final Distance distanceToHub = getDistanceToHub(robotPoseSupplier);
         final Shot shot = distanceToShotMap.get(distanceToHub);
-        shooter.setRPM(shot.shooterRPM);
-        hood.setPosition(shot.hoodPosition);
+        shooter.setRPM(shot.shooterRPM + RPM_ADJUSTMENT);
+
+        // hood.setPosition(shot.hoodPosition);
+        hood.setPosition(STATIC_HOOD_POSITION);
+
         SmartDashboard.putNumber("Distance to Hub (inches)", distanceToHub.in(Inches));
     }
 
