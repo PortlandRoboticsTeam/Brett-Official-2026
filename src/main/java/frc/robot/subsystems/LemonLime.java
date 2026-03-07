@@ -126,6 +126,8 @@ public class LemonLime extends SubsystemBase {
 		// 							AimAndDriveCommand.getDirectionToHub(swerve).getDegrees()), -1, 1);
 
 		n=Math.copySign(Math.abs(n)*.7+.2, n);
+
+		//only return calculated value if aiming enabled
 		return enabled ? n : 0;
 	}
 

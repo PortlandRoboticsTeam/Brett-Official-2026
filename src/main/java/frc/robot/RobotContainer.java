@@ -207,8 +207,8 @@ public class RobotContainer{
 		else
 			drivebase.setDefaultCommand(drivebase.driveCommand(driveAdapter::getDriveY, 
 			driveAdapter::getDriveX, 
-			// ()->(driveAdapter.getDriveR()+mLemonLime.getVisualJoyStick()), false));//
-			()->(driveAdapter.getDriveR()), false));//
+			()->(driveAdapter.getDriveR() + mLemonLime.getVisualJoyStick()), false));//
+			// ()->(driveAdapter.getDriveR()), false));//
 
 //  drivebase.driveToPose(new Pose2d(new Translation2d(4, 4), Rotation2d.fromDegrees(0));
 		driveAdapter.setFieldOriented(true);
@@ -217,10 +217,10 @@ public class RobotContainer{
 		control.d_LSB().and(control.d_RSB()).onTrue		(Commands.runOnce(drivebase::lock).repeatedly());
 		control.d_square().onTrue						(Commands.runOnce(drivebase::zeroGyro));
 
+		//two different auto aim approaches
 		control.d_R1().whileTrue(aimAndShoot);
-
-		// control.d_R1().onTrue							(Auto_Aim_Start); // Auto-Aim
-		// control.d_R1().onFalse							(Auto_Aim_Stop ); // Auto-Aim
+		control.d_triangle().onTrue(Auto_Aim_Start);
+		control.d_triangle().onFalse(Auto_Aim_Stop);
 		
 		control.h_povUp().onTrue						(Intake_Open ); // Open & Activate Intake
 		control.h_povLeft().onTrue						(Intake_Halt ); // Open & Disable Intake
