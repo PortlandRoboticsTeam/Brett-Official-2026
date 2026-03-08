@@ -88,12 +88,12 @@ public class RobotContainer{
 	Command Climber_Down	= mHanger.positionCommand(Hanger.Position.DOWN);
 	Command Climber_Up		= mHanger.positionCommand(Hanger.Position.UP);
 
-	Command FH_Hopper_Aim   = PrepareShotCommand.aimTargetStaticCommand(mShooter,mHood,()->drivebase.getPose());
-	Command FH_Downrange    = PrepareShotCommand.aimDownrangeCommand(mShooter,mHood,()->drivebase.getPose());
-	Command FH_Stop			= PrepareShotCommand.haltCommand(mShooter,mHood,()->drivebase.getPose());
+	Command FH_Hopper_Aim   = PrepareShotCommand.aimTargetStaticCommand(mShooter,mHood,()->drivebase.getPose()).withTimeout(.1);
+	Command FH_Downrange    = PrepareShotCommand.aimDownrangeCommand(mShooter,mHood,()->drivebase.getPose()).withTimeout(.1);
+	Command FH_Stop			= PrepareShotCommand.haltCommand(mShooter,mHood,()->drivebase.getPose()).withTimeout(.1);
 	Command Feeder_Reverse  = mFloor.reverseCommand().alongWith(mFeeder.reverseCommand());
 	Command Feeder_Forward	= mFloor.feedCommand().alongWith(mFeeder.feedCommand());
-	Command Feeder_Stop		= mFloor.idle().alongWith(mFeeder.idle());
+	Command Feeder_Stop		= mFloor.haltCommand().alongWith(mFeeder.haltCommand());
 
 	Command Launcher_Unjam  = 	mFloor.reverseCommand().alongWith(mFeeder.reverseCommand());
 	
@@ -111,6 +111,7 @@ public class RobotContainer{
 
 		AutoCompiler.SetUpCompiler();
 		driveAdapter.setFieldOriented(false);
+		drivebase.resetOdometry(Constants.AutonConstants.DefaultPose);
 		
 		//Create the NamedCommands that will be used in PathPlanner
 		NamedCommands.registerCommand("Placeholder Command", Commands.print(" <!> Placeholder Command Triggered"));
@@ -196,8 +197,8 @@ public class RobotContainer{
 	 * @return the command to run in autonomous
 	 */
 	public Command getAutonomousCommand() {
-		AutoCompiler.loadAutonomousProgram(Constants.AutonConstants.AutonName, Constants.AutonConstants.FlipSide);
-		return AutoCompiler.getAuto();//AutoCompiler.GetAutoBasic(Constants.AutonConstants.AutonName);
+		// AutoCompiler.loadAutonomousProgram(Constants.AutonConstants.AutonName, Constants.AutonConstants.FlipSide);
+		return AutoCompiler.GetAutoBasic(Constants.AutonConstants.AutonName);
 	}
 
 	public void setMotorBrake(boolean brake) {

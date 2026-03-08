@@ -7,9 +7,13 @@ package frc.robot;
 import com.ctre.phoenix6.CANBus;
 import com.pathplanner.lib.config.PIDConstants;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.util.Units;
 
+import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.FeetPerSecond;
 import static edu.wpi.first.units.Units.RPM;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
@@ -44,8 +48,9 @@ public final class Constants
 
    public static final PIDConstants TRANSLATION_PID = new PIDConstants(0.7, 0, 0);
    public static final PIDConstants ANGLE_PID       = new PIDConstants(0.4, 0, 0.01);
-   public static final String AutonName = "Demo";
+   public static final String AutonName = "Middle Shoot";
    public static final boolean FlipSide = false;
+   public static final Pose2d DefaultPose = new Pose2d(new Translation2d(16.54-3.516,4.013),new Rotation2d(Degrees.of(180)));
  }
 
 	public static final class DrivebaseConstants

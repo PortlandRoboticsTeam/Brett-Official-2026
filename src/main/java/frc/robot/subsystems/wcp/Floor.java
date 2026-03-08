@@ -68,10 +68,13 @@ public class Floor extends SubsystemBase {
     }
 
     public Command feedCommand() {
-        return startEnd(() -> set(Speed.FEED), () -> set(Speed.STOP));
+        return runOnce(() -> set(Speed.FEED));
     }
     public Command reverseCommand() {
-        return startEnd(() -> set(Speed.REVERSE), () -> set(Speed.STOP));
+        return runOnce(() -> set(Speed.REVERSE));
+    }
+    public Command haltCommand() {
+        return runOnce(() -> set(Speed.STOP));
     }
 
     @Override

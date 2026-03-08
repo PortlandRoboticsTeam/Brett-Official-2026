@@ -63,7 +63,7 @@ public class PrepareShotCommand extends Command {
     }
     public static Command aimTargetStaticCommand(Shooter shooter, Hood hood, Supplier<Pose2d> robotPoseSupplier) {
         return Commands.runOnce(
-            () -> {shooter.setRPM(2800); hood.setPosition(.19);}
+            () -> {shooter.setRPM(3300); hood.setPosition(.19);}
         );
     }
     public static Command aimDownrangeCommand(Shooter shooter, Hood hood, Supplier<Pose2d> robotPoseSupplier) {
