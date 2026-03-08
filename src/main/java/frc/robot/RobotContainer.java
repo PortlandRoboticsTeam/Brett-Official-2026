@@ -107,7 +107,7 @@ public class RobotContainer{
 		configureBindings();
 		driveAdapter.setVehicleYawSupplier(()->drivebase.getHeading().getRadians());
 		DriverStation.silenceJoystickConnectionWarning(true);
-		drivebase.resetOdometry(new Pose2d(Inches.of(158.84), Inches.of(181.46-143),new Rotation2d(Degrees.of(90))));
+		// drivebase.resetOdometry(new Pose2d(Inches.of(158.84), Inches.of(181.46-143),new Rotation2d(Degrees.of(90))));
 
 		AutoCompiler.SetUpCompiler();
 		driveAdapter.setFieldOriented(false);
@@ -178,13 +178,16 @@ public class RobotContainer{
 		control.h_circle().onTrue						(Feeder_Forward); // Backfeed
 		control.h_circle().or(control.h_cross()).onFalse(Feeder_Stop); // Backfeed
 
+		control.h_L1().onTrue							(Climber_Up);
+		control.h_L1().onFalse							(Climber_Down);
+
 		/**
 		 * ----------------------------------------------------------
 		 * Auto-aim functionality, both direction and distance.
 		 * ----------------------------------------------------------
 		 */
-		control.d_triangle().onTrue(Auto_Aim_Start);
-		control.d_triangle().onFalse(Auto_Aim_Stop);
+		// control.d_triangle().onTrue(Auto_Aim_Start);
+		// control.d_triangle().onFalse(Auto_Aim_Stop);
 	} 
 
 	/**

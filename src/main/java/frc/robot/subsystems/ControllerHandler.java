@@ -50,14 +50,14 @@ public class ControllerHandler extends SubsystemBase {
 	}
 
 	public Trigger d_button(int button_id){
-		if(button_id == swapButton){
+		if(button_id == swapButton && !one_handed){
 			throw new Error(" >>> Illegal Button Binding: Attempted to bind a control to button \""+button_id+"\" on driver controller when that button is reserved for the swap button.");
 		}
 		return  dcc.button(button_id).and(hcc.button(swapButton).negate().or(()->one_handed)).or(
 				hcc.button(button_id).and(dcc.button(swapButton)));
 	}
 	public Trigger h_button(int button_id){
-		if(button_id == swapButton){
+		if(button_id == swapButton && !one_handed){
 			throw new Error(" >>> Illegal Button Binding: Attempted to bind a control to button \""+button_id+"\" on helper controller when that button is reserved for the swap button.");
 		}
 		return  hcc.button(button_id).and(hcc.button(swapButton).negate()).or(
