@@ -77,12 +77,6 @@
           "data": {
             "name": "Open & Disable Intake"
           }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Hook Away Left"
-          }
         }
       ]
     }

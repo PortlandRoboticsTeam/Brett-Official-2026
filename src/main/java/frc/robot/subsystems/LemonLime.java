@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import static edu.wpi.first.units.Units.Inches;
+import static edu.wpi.first.units.Units.Meters;
 
 import java.util.function.DoubleSupplier;
 
@@ -9,7 +10,8 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.units.measure.Distance;
+// import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -48,7 +50,7 @@ public class LemonLime extends SubsystemBase {
 		SmartDashboard.putNumber("Lemon Joystick", getVisualJoyStick());
 		SmartDashboard.putString("Lemon Coords", swerve.getPose().getX()+", "+swerve.getPose().getY());
 
-		ChassisSpeeds velo = swerve.getRobotVelocity();
+		// ChassisSpeeds velo = swerve.getRobotVelocity();
 		pose=swerve.getPose();
 
 		PoseEstimate[] p = {
@@ -85,18 +87,9 @@ public class LemonLime extends SubsystemBase {
 		return getTartetPose().relativeTo(pose).getTranslation().getAngle();
 	}
 
-	// public Distance getRangeRequest(){
-	// 	// if(!enabled) return Meters.of(1);
-	// 	ChassisSpeeds velo = swerve.getFieldVelocity();
-	// 	Transform2d dx = new Pose2d(new Translation2d(velo.vxMetersPerSecond,velo.vyMetersPerSecond),new Rotation2d());
-	// 	Rotation2d da = pose.getRotation().minus(pose_p.getRotation()).times(-50);
-
-	// 	Pose2d rel = getTartetPose().relativeTo(swerve.getPose())
-	// 					.rotateAround(new Translation2d(), da)
-	// 					.plus(dx);
-	// 	double d = rel.getTranslation().getNorm();
-	// 	return Meters.of( d<1 ? 1 : d );
-	// }
+	public Distance getDistance(){
+		return Meters.of(pose.getTranslation().getDistance(getTartetPose().getTranslation()));
+	}
 
 	public Rotation2d getAngleRequest(){
 		// if(!enabled) return new Rotation2d();

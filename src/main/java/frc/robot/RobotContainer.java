@@ -18,12 +18,12 @@ import frc.robot.commands.SubsystemCommands;
 import frc.robot.subsystems.AutoCompiler;
 import frc.robot.subsystems.ControllerHandler;
 import frc.robot.subsystems.DriveControllerAdapter;
+import frc.robot.subsystems.Fuckwit;
 import frc.robot.subsystems.LemonLime;
 import frc.robot.subsystems.stock.SwerveSubsystem;
 import frc.robot.subsystems.wcp.*;
 
-import static edu.wpi.first.units.Units.Degrees;
-import static edu.wpi.first.units.Units.Inches;
+import static edu.wpi.first.units.Units.Meters;
 
 import java.io.File;
 import java.util.Optional;
@@ -44,6 +44,7 @@ public class RobotContainer{
 	private final Limelight	mLimelight	 = new Limelight(Constants.Ports.FORWARD_LIMELIGHT);
 	private final LemonLime mLemonLime   = new LemonLime(drivebase);
 	private final Shooter	mShooter	 = new Shooter();
+	private final Fuckwit   mRanger		 = new Fuckwit(mShooter, mHood, ()->mLemonLime.getDistance().in(Meters));
 
 	// Converts driver input into a field-relative ChassisSpeeds that is controlled
 	// by angular velocity.
@@ -88,12 +89,13 @@ public class RobotContainer{
 	Command Climber_Down	= mHanger.positionCommand(Hanger.Position.DOWN);
 	Command Climber_Up		= mHanger.positionCommand(Hanger.Position.UP);
 
-	Command FH_Hopper_Aim   = PrepareShotCommand.aimTargetStaticCommand(mShooter,mHood,()->drivebase.getPose()).withTimeout(.1);
-	Command FH_Downrange    = PrepareShotCommand.aimDownrangeCommand(mShooter,mHood,()->drivebase.getPose()).withTimeout(.1);
-	Command FH_Stop			= PrepareShotCommand.haltCommand(mShooter,mHood,()->drivebase.getPose()).withTimeout(.1);
+	Command FH_Hopper_Aim   = mRanger.setStaticCommand();
+	Command FH_Downrange    = Commands.none();
+	Command FH_Stop			= mRanger.setDisabledCommand();
 	Command Feeder_Reverse  = mFloor.reverseCommand().alongWith(mFeeder.reverseCommand());
 	Command Feeder_Forward	= mFloor.feedCommand().alongWith(mFeeder.feedCommand());
 	Command Feeder_Stop		= mFloor.haltCommand().alongWith(mFeeder.haltCommand());
+	Command Feeder_Forward_and_Pulse = mFloor.feedCommand().alongWith(mFeeder.feedCommand()).andThen(Commands.waitSeconds(1)).andThen(mIntake.agitateCommand());
 
 	Command Launcher_Unjam  = 	mFloor.reverseCommand().alongWith(mFeeder.reverseCommand());
 	
@@ -103,17 +105,16 @@ public class RobotContainer{
 	Command aimAndShoot = subsystemCommands.aimAndShoot();
 	
 	public RobotContainer() {
-		// Configure the trigger bindings
 		configureBindings();
+		configureNamedCommands();
 		driveAdapter.setVehicleYawSupplier(()->drivebase.getHeading().getRadians());
-		DriverStation.silenceJoystickConnectionWarning(true);
-		// drivebase.resetOdometry(new Pose2d(Inches.of(158.84), Inches.of(181.46-143),new Rotation2d(Degrees.of(90))));
 
 		AutoCompiler.SetUpCompiler();
 		driveAdapter.setFieldOriented(false);
-		drivebase.resetOdometry(Constants.AutonConstants.DefaultPose);
-		
-		//Create the NamedCommands that will be used in PathPlanner
+		drivebase.resetOdometry(Constants.AutonConstants.DefaultPose.selected.getAsPose2d());
+	}
+
+	private void configureNamedCommands(){
 		NamedCommands.registerCommand("Placeholder Command", Commands.print(" <!> Placeholder Command Triggered"));
 		NamedCommands.registerCommand("Placeholder Command II", Commands.print(" <!> Placeholder Command II Triggered"));
 		NamedCommands.registerCommand("Do Nothing", Commands.none());
@@ -135,7 +136,6 @@ public class RobotContainer{
 
 		NamedCommands.registerCommand("Extend Climber",Climber_Up);
 		NamedCommands.registerCommand("Retract Climber",Climber_Down);
-
 	}
 
 	private void configureBindings() {
@@ -161,8 +161,8 @@ public class RobotContainer{
 		 * Intake related code for feeding balls into shooter.
 		 * ---------------------------------------------------------- 
 		 */
-		control.h_povUp().onTrue						(Intake_Open ); // Open & Activate Intake
-		control.h_povLeft().onTrue						(Intake_Halt ); // Open & Disable Intake
+		control.h_L2().onTrue							(Intake_Open ); // Open & Activate Intake
+		control.h_L2().onFalse							(Intake_Halt ); // Open & Disable Intake
 		control.h_povDown().onTrue						(Intake_Close); // Close & Disable Intake
 		control.h_povRight().onTrue						(Intake_Pulse); // Pulse Intake (as adjetator)
 		control.h_menu().onTrue							(Intake_Calibrate); // zero the intake via the limit switch
@@ -176,8 +176,8 @@ public class RobotContainer{
 		control.h_R1().onTrue							(FH_Downrange ); // Fire
 		control.h_R2().or(control.h_R1()).onFalse		(FH_Stop   ); // Stop Firing
 		control.h_cross().onTrue						(Launcher_Unjam); // Backfeed
-		control.h_circle().onTrue						(Feeder_Forward); // Backfeed
-		control.h_circle().or(control.h_cross()).onFalse(Feeder_Stop); // Backfeed
+		control.h_circle().onTrue						(Feeder_Forward_and_Pulse); // Backfeed
+		control.h_circle().or(control.h_cross()).onFalse(Feeder_Stop);
 
 		control.h_L1().onTrue							(Climber_Up);
 		control.h_L1().onFalse							(Climber_Down);

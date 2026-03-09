@@ -19,7 +19,6 @@ import com.pathplanner.lib.util.DriveFeedforwards;
 import com.pathplanner.lib.util.swerve.SwerveSetpoint;
 import com.pathplanner.lib.util.swerve.SwerveSetpointGenerator;
 
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -282,26 +281,6 @@ public class SwerveSubsystem extends SubsystemBase
     );
     }
     
-  //private final PIDController headingPID = new PIDController(0.28, 0.0, 0.06);  //this is for PID of auto aim
-
-  //public void aimAtRequest(SwerveRequest.FieldCentricFacingAngle request) {
-      //Rotation2d target = request.TargetDirection;
-      //double error = target.minus(getHeading()).getRadians();
-
-      //double omega = -headingPID.calculate(getHeading().getRadians(), target.getRadians());
-
-      //if (Math.abs(error) < Math.toRadians(2)) {
-        //omega = 0;
-      //}
-
-      //swerveDrive.drive(
-          //new Translation2d(0, 0),
-          //omega,
-          //false,
-          //false
-      //);
-  //}
-
   /**
    * Get the path follower with events.
    *
