@@ -1,6 +1,8 @@
 package frc.robot.subsystems;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.CommandPS5Controller;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -27,6 +29,7 @@ public class ControllerHandler extends SubsystemBase {
 		swapButton = swapButtonID;
 		dcc = new CommandPS5Controller(driverPort);
 		hcc = new CommandPS5Controller(helperPort);
+		DriverStation.silenceJoystickConnectionWarning(true);
 
 		/*
 		 * Disabling swap button functionality, removing bindings to left bumper.
@@ -38,6 +41,13 @@ public class ControllerHandler extends SubsystemBase {
 	}
 
 	public ControllerHandler(){this(5,0,1);}
+
+	@Override
+	public void periodic(){
+		SmartDashboard.putBoolean("Driver Controller Connected", dcc.isConnected());
+		SmartDashboard.putBoolean("Helper Controller Connected", hcc.isConnected());
+	}
+
 	public boolean setOneHanded(boolean newval){ one_handed=newval; return one_handed; }
 	public boolean getOneHanded(){ return one_handed; }
 

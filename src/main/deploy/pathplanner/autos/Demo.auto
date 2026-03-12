@@ -7,7 +7,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Demo"
+            "pathName": "Middle to shoot"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "enable steering shit"
           }
         },
         {
@@ -17,9 +23,27 @@
           }
         },
         {
-          "type": "named",
+          "type": "path",
           "data": {
-            "name": "Feeder Reverse"
+            "pathName": "Demo"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Demo"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Demo"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Demo"
           }
         }
       ]

@@ -13,10 +13,10 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.util.Units;
 
-import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.RPM;
 
 import edu.wpi.first.units.measure.AngularVelocity;
+import edu.wpi.first.wpilibj.DriverStation;
 import swervelib.math.Matter;
 
 /**
@@ -26,7 +26,6 @@ import swervelib.math.Matter;
  * declared globally (i.e. public static). Do
  * not put anything functional in this class.
  *
- * <p>
  * It is advised to statically import this class (or one of its inner classes)
  * wherever the
  * constants are needed, to reduce verbosity.
@@ -47,12 +46,8 @@ public final class Constants {
 
 		public static final PIDConstants TRANSLATION_PID = new PIDConstants(0.7, 0, 0);
 		public static final PIDConstants ANGLE_PID = new PIDConstants(0.4, 0, 0.01);
-		public static final String AutonName = "Middle Shoot & Reload";
-		public static final boolean FlipSide = false;
-		// public static final Pose2d DefaultPose = new Pose2d(new Translation2d(3.516, 4.013),
-				// new Rotation2d(Degrees.of(180)));
-
-		// new Pose2d(new Translation2d(16.54-3.516,4.013),new Rotation2d(Degrees.of(0)));
+		public static final String AutonName = "Demo";
+		
 		public static enum DefaultPose {
 			Blue_Left   (4,7.60,-90),
 			Blue_Center (3.516,4.013,0),
@@ -61,10 +56,13 @@ public final class Constants {
 			 Red_Center (3.516,4.013,180),
 			 Red_Right  (12.35,7.6,-90);
 			
-			static DefaultPose selected = Red_Center;
+			static DefaultPose selected = isRed() ? Red_Center : Blue_Center;
 			private final Pose2d pose;
 			private DefaultPose(double metersLeft, double metersUp, double degrees){
 				pose = new Pose2d(new Translation2d(metersLeft, metersUp),new Rotation2d(degrees*Math.PI/180));
+			}
+			public static boolean isRed(){
+				return DriverStation.getAlliance().orElse(DriverStation.Alliance.Red).equals(DriverStation.Alliance.Red);
 			}
 			public Pose2d getAsPose2d(){return pose;}
 			public Rotation2d getHeading(){return pose.getRotation();}

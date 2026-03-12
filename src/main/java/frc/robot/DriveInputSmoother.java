@@ -13,12 +13,12 @@ public class DriveInputSmoother {
 
     private final DoubleSupplier forwardInput;
     private final DoubleSupplier leftInput;
-    private final DoubleSupplier rotationInput;
+    // private final DoubleSupplier rotationInput;
 
     public DriveInputSmoother(DoubleSupplier forwardInput, DoubleSupplier leftInput, DoubleSupplier rotationInput) {
         this.forwardInput = forwardInput;
         this.leftInput = leftInput;
-        this.rotationInput = rotationInput;
+        // this.rotationInput = rotationInput;
     }
 
     public DriveInputSmoother(DoubleSupplier forwardInput, DoubleSupplier leftInput) {
