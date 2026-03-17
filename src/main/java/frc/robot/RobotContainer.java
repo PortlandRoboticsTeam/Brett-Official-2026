@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.subsystems.ControllerHandler;
 import frc.robot.subsystems.DriveControllerAdapter;
-import frc.robot.subsystems.Fuckwit;
+import frc.robot.subsystems.AutomaticRanger;
 import frc.robot.subsystems.LemonLime;
 import frc.robot.subsystems.stock.SwerveSubsystem;
 import frc.robot.subsystems.wcp.*;
@@ -33,10 +33,11 @@ public class RobotContainer{
 	private final Floor		mFloor		 = new Floor();
 	private final Hood		mHood		 = new Hood();
 	private final Intake	mIntake		 = new Intake();
-	private final LimelightPositioning mLimelightPositioner = new LimelightPositioning(Constants.Ports.FORWARD_LIMELIGHT);
 	private final LemonLime mLemonLime   = new LemonLime(drivebase);
 	private final Shooter	mShooter	 = new Shooter();
-	private final Fuckwit   mRanger		 = new Fuckwit(mShooter, mHood, ()->mLemonLime.getDistance().in(Meters));
+
+	private final LimelightPositioning	mLimelightPositioner = new LimelightPositioning(Constants.Ports.FORWARD_LIMELIGHT);
+	private final AutomaticRanger   	mRanger				 = new AutomaticRanger(mShooter, mHood, ()->mLemonLime.getDistance().in(Meters));
 
 	// Intake Commands
 	Command Intake_Open		= mIntake.intakeCommand();
@@ -50,7 +51,7 @@ public class RobotContainer{
 	Command FH_Static_Pos   = mRanger.setStaticCommand();
 	Command AutoYFH_Enable  = mRanger.enableContinousCommand ().andThen(mLemonLime.getEnableCommand ());
 	Command AutoYFH_Disable = mRanger.disableContinousCommand().andThen(mLemonLime.getDisableCommand());
-	Command FH_Downrange    = Commands.runOnce(()->mRanger.setRaw(3000,.5),mRanger);
+	Command FH_Downrange    = mRanger.setPassingCommand();
 	Command FH_Stop			= mRanger.setDisabledCommand();
 
 	// Feeder Commands
@@ -114,17 +115,17 @@ public class RobotContainer{
 		control.d_menu().onTrue							(Intake_Calibrate); // zero the intake via the limit switch
 
 		// Fire Control
-		control.d_R2().onTrue							(AutoYFH_Enable); // Fire
+		control.d_R2().onTrue							(AutoYFH_Enable	); // Fire
 		control.d_R2().onFalse							(AutoYFH_Disable); // Fire
-		control.d_R1().onTrue							(FH_Downrange  ); // Fire
-		control.d_R2().or(control.d_R1()).onFalse		(FH_Stop       ); // Stop Firing
+		control.d_R1().onTrue							(FH_Downrange	); // Fire
+		control.d_R1().onFalse							(FH_Stop		); // Stop Firing
 		control.d_cross().onTrue						(Launcher_Backfeed); // Backfeed
 		control.d_circle().onTrue						(Feeder_Forward_and_Pulse); // Backfeed
 		control.d_circle().or(control.d_cross()).onFalse(Feeder_Stop   );	
 		
 		// temporary
-		control.d_triangle().onTrue(mLemonLime.getEnableCommand());
-		control.d_triangle().onFalse(mLemonLime.getDisableCommand());
+		control.d_triangle().onTrue(mRanger.toggleContinousCommand());//mLemonLime.getEnableCommand());
+		// control.d_triangle().onFalse(mLemonLime.getDisableCommand());
 	} 
 
 	public Command getAutonomousCommand() {
@@ -132,7 +133,10 @@ public class RobotContainer{
 		return AutoBuilder.buildAuto(Constants.AutonConstants.AutonName);
 	}
 
-	public void setMotorBrake(boolean brake) { drivebase.setMotorBrake(brake); }
+	public void setMotorBrake(boolean brake) { 
+		drivebase.setMotorBrake(brake);
+		if(brake) drivebase.lock();
+	}
 
 	private Command updateVisionCommand() {
         return mLimelightPositioner.run(() -> {
