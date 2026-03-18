@@ -16,11 +16,11 @@
     },
     {
       "anchor": {
-        "x": 0.9208416547788869,
+        "x": 0.7138231098430812,
         "y": 5.969329529243937
       },
       "prevControl": {
-        "x": 1.170841654778887,
+        "x": 0.9638231098430812,
         "y": 5.969329529243937
       },
       "nextControl": null,
@@ -33,7 +33,7 @@
   "pointTowardsZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 0.3,
+    "maxVelocity": 3.0,
     "maxAcceleration": 3.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
@@ -45,7 +45,7 @@
     "rotation": 180.0
   },
   "reversed": false,
-  "folder": null,
+  "folder": "Center Ops",
   "idealStartingState": {
     "velocity": 0,
     "rotation": 180.0

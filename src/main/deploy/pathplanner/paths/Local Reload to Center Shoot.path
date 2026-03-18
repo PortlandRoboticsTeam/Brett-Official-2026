@@ -8,64 +8,27 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.2092756205259947,
-        "y": 5.970206071285918
+        "x": 1.3313298989242945,
+        "y": 5.538747130065747
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 1.904179743223965,
-        "y": 5.956390870185448
+        "x": 3.276036144578313,
+        "y": 5.1168433734939756
       },
       "prevControl": {
-        "x": 1.0371930345249576,
-        "y": 5.956390870185448
-      },
-      "nextControl": {
-        "x": 2.5622060945213274,
-        "y": 5.956390870185448
-      },
-      "isLocked": false,
-      "linkedName": null
-    },
-    {
-      "anchor": {
-        "x": 1.904179743223965,
-        "y": 4.0
-      },
-      "prevControl": {
-        "x": 1.3597975208590616,
-        "y": 4.0
-      },
-      "nextControl": {
-        "x": 2.5641315080029505,
-        "y": 4.0
-      },
-      "isLocked": false,
-      "linkedName": null
-    },
-    {
-      "anchor": {
-        "x": 2.75,
-        "y": 4.0
-      },
-      "prevControl": {
-        "x": 2.188830242510699,
-        "y": 4.00265335235378
+        "x": 3.041470948392408,
+        "y": 5.03036118608947
       },
       "nextControl": null,
-      "isLocked": true,
+      "isLocked": false,
       "linkedName": "Center Firing Position"
     }
   ],
-  "rotationTargets": [
-    {
-      "waypointRelativePos": 1.9189765458421753,
-      "rotationDegrees": 0.0
-    }
-  ],
+  "rotationTargets": [],
   "constraintZones": [],
   "pointTowardsZones": [],
   "eventMarkers": [],
@@ -79,10 +42,10 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": -45.0
   },
   "reversed": false,
-  "folder": null,
+  "folder": "Center Ops",
   "idealStartingState": {
     "velocity": 0,
     "rotation": -179.1319485502545

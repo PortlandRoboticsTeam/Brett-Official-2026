@@ -108,29 +108,30 @@ public class RobotContainer{
 		control.d_LSB().and(control.d_RSB()).onFalse	(Commands.runOnce(()->setMotorBrake(false)));
 		
 		// Intake Control
-		control.d_L2().onTrue							(Intake_Open ); // Open & Activate Intake
-		control.d_L2().onFalse							(Intake_Halt ); // Open & Disable Intake
-		control.d_povDown().onTrue						(Intake_Close); // Close & Disable Intake
-		control.d_povRight().onTrue						(Intake_Pulse); // Pulse Intake (as adjetator)
-		control.d_menu().onTrue							(Intake_Calibrate); // zero the intake via the limit switch
+		control.d_L2().onTrue		(Intake_Open ); // Open & Activate Intake
+		control.d_L2().onFalse		(Intake_Halt ); // Open & Disable Intake
+		control.d_povDown().onTrue	(Intake_Close); // Close & Disable Intake
+		control.d_povRight().onTrue	(Intake_Pulse); // Pulse Intake (as adjetator)
+		control.d_menu().onTrue		(Intake_Calibrate); // zero the intake via the limit switch
 
 		// Fire Control
-		control.d_R2().onTrue							(AutoYFH_Enable	); // Fire
-		control.d_R2().onFalse							(AutoYFH_Disable); // Fire
-		control.d_R1().onTrue							(FH_Downrange	); // Fire
-		control.d_R1().onFalse							(FH_Stop		); // Stop Firing
-		control.d_cross().onTrue						(Launcher_Backfeed); // Backfeed
-		control.d_circle().onTrue						(Feeder_Forward_and_Pulse); // Backfeed
-		control.d_circle().or(control.d_cross()).onFalse(Feeder_Stop   );	
-		
-		// temporary
-		control.d_triangle().onTrue(mRanger.toggleContinousCommand());//mLemonLime.getEnableCommand());
-		// control.d_triangle().onFalse(mLemonLime.getDisableCommand());
+		control.d_R2().onTrue		(AutoYFH_Enable	); // Fire
+		control.d_R2().onFalse		(AutoYFH_Disable); // Fire
+		control.d_R1().onTrue		(FH_Downrange	); // Fire
+		control.d_R1().onFalse		(FH_Stop		); // Stop Firing
+		control.d_cross().onTrue	(Launcher_Backfeed); // Backfeed
+		control.d_circle().or(control.d_R2()).onTrue	(Feeder_Forward_and_Pulse); // Backfeed
+
+		control.d_circle().or(control.d_cross()).or(control.d_R2()).onFalse(Feeder_Stop);
 	} 
 
 	public Command getAutonomousCommand() {
 		System.out.println("Autonomous Command Loaded");
-		return AutoBuilder.buildAuto(Constants.AutonConstants.AutonName);
+		return AutoBuilder.buildAuto(Constants.AutonConstants.AutonName)
+			.andThen(
+				mLemonLime.getDisableCommand()
+				.alongWith(mRanger.disableContinousCommand())
+			);
 	}
 
 	public void setMotorBrake(boolean brake) { 

@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.75,
-        "y": 4.0
+        "x": 3.276036144578313,
+        "y": 5.1168433734939756
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.5,
-        "y": 4.0
+        "x": 3.088713609892617,
+        "y": 5.282403839786284
       },
       "isLocked": true,
       "linkedName": "Center Firing Position"
@@ -20,12 +20,12 @@
         "y": 5.956390870185448
       },
       "prevControl": {
-        "x": 2.913812417362547,
-        "y": 5.956390870185448
+        "x": 2.336079063464437,
+        "y": 5.847172570901983
       },
       "nextControl": {
-        "x": 1.4531719368624088,
-        "y": 5.956390870185448
+        "x": 1.8209959095426245,
+        "y": 6.0973340441746
       },
       "isLocked": false,
       "linkedName": null
@@ -36,20 +36,15 @@
         "y": 5.956390870185448
       },
       "prevControl": {
-        "x": 1.7877318116975744,
-        "y": 5.956390870185448
+        "x": 1.564385998139736,
+        "y": 5.89539923560413
       },
       "nextControl": null,
       "isLocked": false,
       "linkedName": null
     }
   ],
-  "rotationTargets": [
-    {
-      "waypointRelativePos": 0.9296375266524527,
-      "rotationDegrees": 180.0
-    }
-  ],
+  "rotationTargets": [],
   "constraintZones": [],
   "pointTowardsZones": [],
   "eventMarkers": [],
@@ -66,10 +61,10 @@
     "rotation": -179.1319485502545
   },
   "reversed": false,
-  "folder": null,
+  "folder": "Center Ops",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": -45.0
   },
   "useDefaultConstraints": true
 }

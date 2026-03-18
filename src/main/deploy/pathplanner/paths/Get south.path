@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.913395149786019,
-        "y": 4.00265335235378
+        "x": 5.964,
+        "y": 2.582
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.9947503566333809,
-        "y": 2.475891583452211
+        "x": 6.964,
+        "y": 2.582
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 3.5055180722891564,
-        "y": 2.679963855421686
+        "x": 7.712686746987952,
+        "y": 2.582
       },
       "prevControl": {
-        "x": 3.2770651851340924,
-        "y": 2.781498471935049
+        "x": 6.712686746987952,
+        "y": 2.582
       },
       "nextControl": null,
       "isLocked": false,
@@ -33,7 +33,7 @@
   "pointTowardsZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 3.0,
+    "maxVelocity": 1.0,
     "maxAcceleration": 3.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
@@ -42,13 +42,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 50.14257936587003
+    "rotation": 0.0
   },
   "reversed": false,
-  "folder": null,
+  "folder": "South Ops",
   "idealStartingState": {
-    "velocity": 0,
-    "rotation": 0.325540698659299
+    "velocity": 1.0,
+    "rotation": 0.0
   },
-  "useDefaultConstraints": true
+  "useDefaultConstraints": false
 }

@@ -1,0 +1,262 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "sequential",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Auto YFH Enable"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Feeder Reverse"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Open & Activate Intake"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Open & Disable Intake"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "sequential",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Middle to shoot"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Feeder Forward"
+                }
+              },
+              {
+                "type": "race",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Pulse Intake (as adjetator)"
+                      }
+                    },
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 2.0
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "sequential",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Auto YFH Disable"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Feeder Stop"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Open & Disable Intake"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "WHEEEEEE! (Center North Ramp)"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Open & Activate Intake"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Get North"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "sequential",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Return North"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Auto YFH Enable"
+                }
+              },
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 0.7
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Feeder Forward"
+                }
+              },
+              {
+                "type": "race",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Pulse Intake (as adjetator)"
+                      }
+                    },
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 2.0
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "sequential",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Auto YFH Disable"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Feeder Stop"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Open & Disable Intake"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Shoot to Local Reload"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Open & Activate Intake"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Reload Nudge"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "sequential",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Auto YFH Enable"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Local Reload to Center Shoot"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Feeder Forward"
+                }
+              },
+              {
+                "type": "race",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Pulse Intake (as adjetator)"
+                      }
+                    },
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 2.0
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": "Legacy",
+  "choreoAuto": false
+}
