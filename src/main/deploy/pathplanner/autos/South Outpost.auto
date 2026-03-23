@@ -23,13 +23,13 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "Open & Activate Intake"
+                  "name": "Intake Open"
                 }
               },
               {
                 "type": "named",
                 "data": {
-                  "name": "Open & Disable Intake"
+                  "name": "Intake Disable"
                 }
               }
             ]
@@ -42,7 +42,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "South Origin to Shoot"
+                  "pathName": "South Shoot"
                 }
               },
               {
@@ -58,7 +58,7 @@
                     {
                       "type": "named",
                       "data": {
-                        "name": "Pulse Intake (as adjetator)"
+                        "name": "Intake Pulse"
                       }
                     },
                     {
@@ -92,25 +92,25 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "Open & Disable Intake"
+                  "name": "Intake Disable"
                 }
               },
               {
                 "type": "path",
                 "data": {
-                  "pathName": "WHEEEEEE! (south ramp)"
+                  "pathName": "South to Outpost"
+                }
+              },
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 2.5
                 }
               },
               {
                 "type": "named",
                 "data": {
-                  "name": "Open & Activate Intake"
-                }
-              },
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "Get south"
+                  "name": "Intake Open"
                 }
               }
             ]
@@ -123,7 +123,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Return South"
+                  "pathName": "Outpost to South"
                 }
               },
               {
@@ -151,13 +151,13 @@
                     {
                       "type": "named",
                       "data": {
-                        "name": "Pulse Intake (as adjetator)"
+                        "name": "Intake Pulse"
                       }
                     },
                     {
                       "type": "wait",
                       "data": {
-                        "waitTime": 2.0
+                        "waitTime": 4.0
                       }
                     }
                   ]
@@ -179,31 +179,13 @@
               {
                 "type": "named",
                 "data": {
+                  "name": "Intake Disable"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
                   "name": "Feeder Stop"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Open & Disable Intake"
-                }
-              },
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "WHEEEEEE! (south ramp)"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Open & Activate Intake"
-                }
-              },
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "Get south II"
                 }
               }
             ]
@@ -213,6 +195,6 @@
     }
   },
   "resetOdom": true,
-  "folder": "South",
+  "folder": null,
   "choreoAuto": false
 }

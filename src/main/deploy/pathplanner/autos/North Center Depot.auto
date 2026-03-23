@@ -1,0 +1,262 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "sequential",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Auto YFH Enable"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Feeder Reverse"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Intake Open"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Intake Disable"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "sequential",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "North Shoot"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Feeder Forward"
+                }
+              },
+              {
+                "type": "race",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Intake Pulse"
+                      }
+                    },
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 2.0
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "sequential",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Auto YFH Disable"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Feeder Stop"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Intake Disable"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "North Go"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Intake Open"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "North Get"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "sequential",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "North Return"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Auto YFH Enable"
+                }
+              },
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 0.7
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Feeder Forward"
+                }
+              },
+              {
+                "type": "race",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Intake Pulse"
+                      }
+                    },
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 2.0
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "sequential",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Auto YFH Disable"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Feeder Stop"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Intake Disable"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "North to Depot"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Intake Open"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Depot Nudge"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "sequential",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Auto YFH Enable"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Depot to North"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Feeder Forward"
+                }
+              },
+              {
+                "type": "race",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Intake Pulse"
+                      }
+                    },
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 2.0
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": null,
+  "choreoAuto": false
+}

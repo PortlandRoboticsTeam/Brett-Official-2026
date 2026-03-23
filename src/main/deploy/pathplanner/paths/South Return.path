@@ -38,13 +38,13 @@
   "pointTowardsZones": [],
   "eventMarkers": [
     {
-      "name": "Open & Disable Intake",
+      "name": "Intake Disable",
       "waypointRelativePos": 0.2372208436724496,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",
         "data": {
-          "name": "Open & Disable Intake"
+          "name": "Intake Disable"
         }
       }
     },
@@ -74,8 +74,8 @@
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 3.0,
-    "maxAcceleration": 3.0,
+    "maxVelocity": 4.0,
+    "maxAcceleration": 2.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
     "nominalVoltage": 12.0,

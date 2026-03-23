@@ -16,12 +16,12 @@
     },
     {
       "anchor": {
-        "x": 5.964,
-        "y": 2.582
+        "x": 6.511,
+        "y": 2.5820633630589542
       },
       "prevControl": {
-        "x": 4.964,
-        "y": 2.582
+        "x": 5.511,
+        "y": 2.5820633630589542
       },
       "nextControl": null,
       "isLocked": false,
@@ -38,22 +38,22 @@
   "pointTowardsZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 3.0,
-    "maxAcceleration": 3.0,
+    "maxVelocity": 4.0,
+    "maxAcceleration": 2.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
     "nominalVoltage": 12.0,
-    "unlimited": true
+    "unlimited": false
   },
   "goalEndState": {
-    "velocity": 1.0,
+    "velocity": 0.0,
     "rotation": 0.0
   },
   "reversed": false,
   "folder": "South Ops",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 42.23614262908745
+    "rotation": 41.60371433173959
   },
   "useDefaultConstraints": true
 }

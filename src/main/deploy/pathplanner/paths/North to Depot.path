@@ -3,41 +3,41 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.276036144578313,
-        "y": 5.1168433734939756
+        "x": 3.1230481927710843,
+        "y": 5.390036144578313
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.8770602409638544,
-        "y": 5.728795180722891
+        "x": 2.9357256580853885,
+        "y": 5.555596610870621
       },
-      "isLocked": false,
+      "isLocked": true,
       "linkedName": "Center Firing Position"
     },
     {
       "anchor": {
-        "x": 4.631072289156626,
-        "y": 5.532096385542169
+        "x": 2.6422289156626504,
+        "y": 5.739722891566265
       },
       "prevControl": {
-        "x": 3.978949060989282,
-        "y": 5.542129050590898
+        "x": 2.867109690967316,
+        "y": 5.6305045922828
       },
       "nextControl": {
-        "x": 5.341373493975904,
-        "y": 5.521168674698795
+        "x": 2.352026537045503,
+        "y": 5.880666065555417
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 6.947746987951808,
-        "y": 5.532096385542169
+        "x": 1.3219400855920111,
+        "y": 5.956390870185448
       },
       "prevControl": {
-        "x": 6.322196650371272,
-        "y": 5.512612419424975
+        "x": 1.564385998139736,
+        "y": 5.89539923560413
       },
       "nextControl": null,
       "isLocked": false,
@@ -46,27 +46,27 @@
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 1.2929460580912726,
-      "rotationDegrees": -45.0
+      "waypointRelativePos": 1.246473029045639,
+      "rotationDegrees": 180.0
     }
   ],
   "constraintZones": [],
   "pointTowardsZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 3.0,
-    "maxAcceleration": 3.0,
+    "maxVelocity": 4.0,
+    "maxAcceleration": 2.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
     "nominalVoltage": 12.0,
-    "unlimited": true
+    "unlimited": false
   },
   "goalEndState": {
-    "velocity": 1.0,
-    "rotation": 0.0
+    "velocity": 0,
+    "rotation": -179.1319485502545
   },
   "reversed": false,
-  "folder": "Center Ops",
+  "folder": "North Ops",
   "idealStartingState": {
     "velocity": 0,
     "rotation": -45.0

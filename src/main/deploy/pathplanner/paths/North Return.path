@@ -3,45 +3,45 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.276036144578313,
-        "y": 5.1168433734939756
+        "x": 7.92,
+        "y": 5.532
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.088713609892617,
-        "y": 5.282403839786284
-      },
-      "isLocked": true,
-      "linkedName": "Center Firing Position"
-    },
-    {
-      "anchor": {
-        "x": 2.1111982881597715,
-        "y": 5.956390870185448
-      },
-      "prevControl": {
-        "x": 2.336079063464437,
-        "y": 5.847172570901983
-      },
-      "nextControl": {
-        "x": 1.8209959095426245,
-        "y": 6.0973340441746
+        "x": 8.459798620853315,
+        "y": 5.522440147275029
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 1.3219400855920111,
-        "y": 5.956390870185448
+        "x": 4.631072289156626,
+        "y": 5.532
       },
       "prevControl": {
-        "x": 1.564385998139736,
-        "y": 5.89539923560413
+        "x": 5.895945082111487,
+        "y": 5.559195152265186
+      },
+      "nextControl": {
+        "x": 4.274557670344725,
+        "y": 5.524334826555401
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 3.1230481927710843,
+        "y": 5.390036144578313
+      },
+      "prevControl": {
+        "x": 3.0940644185691877,
+        "y": 5.638350342386278
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Center Firing Position"
     }
   ],
   "rotationTargets": [],
@@ -49,22 +49,22 @@
   "pointTowardsZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 3.0,
-    "maxAcceleration": 3.0,
+    "maxVelocity": 4.0,
+    "maxAcceleration": 2.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
     "nominalVoltage": 12.0,
     "unlimited": false
   },
   "goalEndState": {
-    "velocity": 0,
-    "rotation": -179.1319485502545
+    "velocity": 0.0,
+    "rotation": -45.0
   },
   "reversed": false,
-  "folder": "Center Ops",
+  "folder": "North Ops",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -45.0
+    "rotation": 0.0
   },
   "useDefaultConstraints": true
 }

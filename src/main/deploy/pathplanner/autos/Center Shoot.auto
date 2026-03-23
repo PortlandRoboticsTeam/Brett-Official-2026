@@ -1,0 +1,87 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Center Shoot"
+          }
+        },
+        {
+          "type": "race",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Intake Pulse"
+                }
+              },
+              {
+                "type": "sequential",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Spool Up for Hopper"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Feeder Reverse"
+                      }
+                    },
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 1.0
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Feeder Forward"
+                      }
+                    },
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 4.0
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Spool Down"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Feeder Stop"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Intake Disable"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": "Basic",
+  "choreoAuto": false
+}

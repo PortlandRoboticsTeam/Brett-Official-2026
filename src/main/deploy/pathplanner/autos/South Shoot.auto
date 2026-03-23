@@ -7,7 +7,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Middle to shoot"
+            "pathName": "South Shoot"
           }
         },
         {
@@ -17,7 +17,7 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "Pulse Intake (as adjetator)"
+                  "name": "Intake Pulse"
                 }
               },
               {
@@ -75,13 +75,13 @@
         {
           "type": "named",
           "data": {
-            "name": "Open & Disable Intake"
+            "name": "Intake Disable"
           }
         }
       ]
     }
   },
   "resetOdom": true,
-  "folder": "Legacy",
+  "folder": "Basic",
   "choreoAuto": false
 }

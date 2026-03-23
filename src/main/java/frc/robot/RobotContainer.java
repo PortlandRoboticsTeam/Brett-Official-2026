@@ -69,6 +69,7 @@ public class RobotContainer{
 
 		driveAdapter.setFieldOriented(false);
 		drivebase.resetOdometry(Constants.AutonConstants.DefaultPose.selected.getAsPose2d());
+		drivebase.attachAutonSteeringIntercept(()->mLemonLime.getEnabled(), mLemonLime.getAutonInterceptRequest());
 	}
 
 	private void configureNamedCommands(){
@@ -78,11 +79,11 @@ public class RobotContainer{
 		NamedCommands.registerCommand("Auto YFH Enable",AutoYFH_Enable);
 		NamedCommands.registerCommand("Auto YFH Disable",AutoYFH_Disable);
 
-		NamedCommands.registerCommand("Open & Activate Intake",Intake_Open);
-		NamedCommands.registerCommand("Open & Disable Intake",Intake_Halt);
-		NamedCommands.registerCommand("Close & Disable Intake",Intake_Close);
-		NamedCommands.registerCommand("Pulse Intake (as adjetator)",Intake_Pulse);
-		NamedCommands.registerCommand("Calibrate Intake",Intake_Calibrate);
+		NamedCommands.registerCommand("Intake Open",Intake_Open);
+		NamedCommands.registerCommand("Intake Disable",Intake_Halt);
+		NamedCommands.registerCommand("Intake Close",Intake_Close);
+		NamedCommands.registerCommand("Intake Pulse",Intake_Pulse);
+		NamedCommands.registerCommand("Intake Calibrate",Intake_Calibrate);
 
 		NamedCommands.registerCommand("Spool Up for Hopper", FH_Static_Pos);
 		NamedCommands.registerCommand("Spool Up for Passing", FH_Downrange);

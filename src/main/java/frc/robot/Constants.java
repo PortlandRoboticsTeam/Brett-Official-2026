@@ -46,7 +46,7 @@ public final class Constants {
 
 		public static final PIDConstants TRANSLATION_PID = new PIDConstants(0.7, 0, 0);
 		public static final PIDConstants ANGLE_PID = new PIDConstants(0.4, 0, 0.01);
-		public static final String AutonName = "Shooty Shooty";
+		public static final String AutonName = "North Depot";
 		
 		public static enum DefaultPose {
 			Blue_Left   (4,7.60,-90),

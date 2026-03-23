@@ -1,0 +1,206 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "sequential",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Auto YFH Enable"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Placeholder Command"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Placeholder Command"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Placeholder Command"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "sequential",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "South Shoot"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Placeholder Command"
+                }
+              },
+              {
+                "type": "race",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Placeholder Command"
+                      }
+                    },
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 2.0
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 100.0
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "sequential",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Auto YFH Disable"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Feeder Stop"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Intake Disable"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "South to Outpost"
+                }
+              },
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 2.5
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Intake Open"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "sequential",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Outpost to South"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Auto YFH Enable"
+                }
+              },
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 0.7
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Feeder Forward"
+                }
+              },
+              {
+                "type": "race",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Intake Pulse"
+                      }
+                    },
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 4.0
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "sequential",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Auto YFH Disable"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Intake Disable"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Feeder Stop"
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": null,
+  "choreoAuto": false
+}

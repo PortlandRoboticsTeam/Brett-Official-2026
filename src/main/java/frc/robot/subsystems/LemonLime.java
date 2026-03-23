@@ -33,6 +33,8 @@ public class LemonLime extends SubsystemBase {
 	public void periodic(){
 		SmartDashboard.putNumber("Lemon Angular Offset", getAngularOffset().getDegrees());
 		SmartDashboard.putNumber("Lemon Linear Offset", getDistance().in(Meters));
+		SmartDashboard.putBoolean("Lemon Activation", enabled);
+		SmartDashboard.putNumber("Lemon Auton Stick", getAutonInterceptRequest().getAsDouble());
 	}
 	
 	public Alliance getAlliance(){ return DriverStation.getAlliance().orElse(Alliance.Red); }
