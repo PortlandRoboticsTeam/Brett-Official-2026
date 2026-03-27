@@ -3,37 +3,32 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 0.4421112696148356,
-        "y": 0.4703994293865924
+        "x": 3.560156626506024,
+        "y": 6.329819277108434
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.1614730521264471,
-        "y": 0.9789137928861872
+        "x": 2.8935662650602403,
+        "y": 5.9473493975903615
       },
-      "isLocked": true,
-      "linkedName": "Outpost"
+      "isLocked": false,
+      "linkedName": null
     },
     {
       "anchor": {
-        "x": 2.983876324068145,
-        "y": 2.5820633630589542
+        "x": 0.4550499286733236,
+        "y": 4.85660485021398
       },
       "prevControl": {
-        "x": 2.4630155821904665,
-        "y": 2.200151758536316
+        "x": 1.7243012048192772,
+        "y": 4.942
       },
       "nextControl": null,
-      "isLocked": true,
-      "linkedName": "South Firing Position"
+      "isLocked": false,
+      "linkedName": "Depot Begin"
     }
   ],
-  "rotationTargets": [
-    {
-      "waypointRelativePos": 0.7,
-      "rotationDegrees": 45.0
-    }
-  ],
+  "rotationTargets": [],
   "constraintZones": [],
   "pointTowardsZones": [],
   "eventMarkers": [],
@@ -46,11 +41,11 @@
     "unlimited": false
   },
   "goalEndState": {
-    "velocity": 0.0,
-    "rotation": 41.60371433173959
+    "velocity": 0,
+    "rotation": 90.0
   },
   "reversed": false,
-  "folder": "South Ops",
+  "folder": "North Ops",
   "idealStartingState": {
     "velocity": 0,
     "rotation": 90.0

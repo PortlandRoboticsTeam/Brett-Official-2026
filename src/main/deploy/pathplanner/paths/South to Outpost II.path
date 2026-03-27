@@ -3,16 +3,16 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.983876324068145,
-        "y": 2.5820633630589542
+        "x": 3.5732667617689007,
+        "y": 1.7125106990014274
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.6984145959193104,
-        "y": 2.0784742040575908
+        "x": 3.287805033620066,
+        "y": 1.208921540000064
       },
       "isLocked": true,
-      "linkedName": "South Firing Position"
+      "linkedName": null
     },
     {
       "anchor": {
@@ -83,7 +83,7 @@
   "folder": "South Ops",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 41.60371433173959
+    "rotation": 90.0
   },
   "useDefaultConstraints": true
 }

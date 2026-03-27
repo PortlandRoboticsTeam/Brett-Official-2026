@@ -19,6 +19,7 @@ import frc.robot.subsystems.stock.SwerveSubsystem;
 import frc.robot.subsystems.wcp.*;
 
 import static edu.wpi.first.units.Units.Meters;
+import static edu.wpi.first.units.Units.Seconds;
 
 import java.io.File;
 import java.util.Optional;
@@ -59,8 +60,14 @@ public class RobotContainer{
 	Command Feeder_Forward	= mFloor.feedCommand().alongWith(mFeeder.feedCommand());
 	Command Feeder_Stop		= mFloor.haltCommand().alongWith(mFeeder.haltCommand());
 	Command Feeder_Forward_and_Pulse = mFloor.feedCommand().alongWith(mFeeder.feedCommand())
-										.andThen(Commands.waitSeconds(1)).andThen(mIntake.agitateCommand());
+										.andThen(Commands.waitSeconds(3)).andThen(mIntake.agitateCommand());
 	Command Launcher_Backfeed  = 	mFloor.reverseCommand().alongWith(mFeeder.reverseCommand());
+
+	Command All_Stop		= mFloor.haltCommand()
+								.alongWith(mFeeder.haltCommand())
+								.alongWith(mRanger.disableContinousCommand())
+								.alongWith(mLemonLime.getDisableCommand())
+								.alongWith(mIntake.haltCommand());
 		
 	public RobotContainer() {
 		configureBindings();
@@ -91,6 +98,7 @@ public class RobotContainer{
 		NamedCommands.registerCommand("Feeder Forward", Feeder_Forward);
 		NamedCommands.registerCommand("Feeder Reverse", Feeder_Reverse);
 		NamedCommands.registerCommand("Feeder Stop", Feeder_Stop);
+		NamedCommands.registerCommand("All Stop", All_Stop);
 
 		NamedCommands.registerCommand("enable steering shit", mLemonLime.getEnableCommand());
 	}
@@ -105,8 +113,9 @@ public class RobotContainer{
 				driveAdapter::getDriveY, driveAdapter::getDriveX, 
 				()->(driveAdapter.getDriveR() + mLemonLime.getVisualJoyStick()),
 			false));
-		control.d_LSB().and(control.d_RSB()).onTrue		(Commands.runOnce(()->setMotorBrake(true)));
-		control.d_LSB().and(control.d_RSB()).onFalse	(Commands.runOnce(()->setMotorBrake(false)));
+		control.d_LSB().and(control.d_RSB()).onTrue		(Commands.runOnce(()->{setMotorBrake(true); All_Stop.execute();}));
+		control.d_LSB().and(control.d_RSB()).onFalse	(Commands.runOnce(()-> setMotorBrake(false) ));
+		control.d_blink()					.onTrue		(Commands.runOnce(()->driveAdapter.toggleFieldOriented(), driveAdapter));
 		
 		// Intake Control
 		control.d_L2().onTrue		(Intake_Open ); // Open & Activate Intake
@@ -121,7 +130,7 @@ public class RobotContainer{
 		control.d_R1().onTrue		(FH_Downrange	); // Fire
 		control.d_R1().onFalse		(FH_Stop		); // Stop Firing
 		control.d_cross().onTrue	(Launcher_Backfeed); // Backfeed
-		control.d_circle().or(control.d_R2()).onTrue	(Feeder_Forward_and_Pulse); // Backfeed
+		control.d_circle().onTrue	(Feeder_Forward_and_Pulse); // Backfeed
 
 		control.d_circle().or(control.d_cross()).or(control.d_R2()).onFalse(Feeder_Stop);
 	} 
@@ -129,10 +138,9 @@ public class RobotContainer{
 	public Command getAutonomousCommand() {
 		System.out.println("Autonomous Command Loaded");
 		return AutoBuilder.buildAuto(Constants.AutonConstants.AutonName)
-			.andThen(
-				mLemonLime.getDisableCommand()
-				.alongWith(mRanger.disableContinousCommand())
-			);
+			.withTimeout(Seconds.of(20))
+			.andThen(()->All_Stop.execute())
+			.handleInterrupt(()->All_Stop.execute());
 	}
 
 	public void setMotorBrake(boolean brake) { 
@@ -151,7 +159,6 @@ public class RobotContainer{
                     m.standardDeviations
                 );
             });
-			mLimelightPositioner.printMegaTagToDashboard();
         })
         .ignoringDisable(true);
     }

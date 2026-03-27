@@ -1,0 +1,37 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "Auto YFH Enable"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Demo"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 20.0
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Auto YFH Disable"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": "Current",
+  "choreoAuto": false
+}

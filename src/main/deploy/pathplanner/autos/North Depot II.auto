@@ -42,7 +42,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "South Shoot"
+                  "pathName": "North Shoot"
                 }
               },
               {
@@ -98,7 +98,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "South Go"
+                  "pathName": "North to Depot II"
                 }
               },
               {
@@ -110,7 +110,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "South Get"
+                  "pathName": "Depot Nudge II"
                 }
               }
             ]
@@ -121,21 +121,15 @@
           "data": {
             "commands": [
               {
-                "type": "path",
-                "data": {
-                  "pathName": "South Return"
-                }
-              },
-              {
                 "type": "named",
                 "data": {
                   "name": "Auto YFH Enable"
                 }
               },
               {
-                "type": "wait",
+                "type": "path",
                 "data": {
-                  "waitTime": 0.7
+                  "pathName": "Depot to North II"
                 }
               },
               {
@@ -161,124 +155,6 @@
                       }
                     }
                   ]
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "sequential",
-          "data": {
-            "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "Auto YFH Disable"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Feeder Stop"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Intake Disable"
-                }
-              },
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "South to Outpost"
-                }
-              },
-              {
-                "type": "wait",
-                "data": {
-                  "waitTime": 3.0
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Intake Open"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "sequential",
-          "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "Outpost to South"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Auto YFH Enable"
-                }
-              },
-              {
-                "type": "wait",
-                "data": {
-                  "waitTime": 0.7
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Feeder Forward"
-                }
-              },
-              {
-                "type": "race",
-                "data": {
-                  "commands": [
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "Intake Pulse"
-                      }
-                    },
-                    {
-                      "type": "wait",
-                      "data": {
-                        "waitTime": 2.0
-                      }
-                    }
-                  ]
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "sequential",
-          "data": {
-            "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "Auto YFH Disable"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Intake Disable"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Feeder Stop"
                 }
               }
             ]

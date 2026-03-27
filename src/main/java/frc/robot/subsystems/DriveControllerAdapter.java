@@ -11,12 +11,15 @@ public class DriveControllerAdapter extends SubsystemBase{
 	double intx = 0, inty = 0, intr = 0;
 
 	final ControllerHandler ctrl;
+	private boolean useNOS = false;
 	DoubleSupplier yaw = () -> 0;
 	boolean isFieldOriented = OperatorConstants.DEFAULT_IS_FIELD_ORIENTED;
 
 	public DriveControllerAdapter(ControllerHandler c){
 		super();
 		ctrl=c;
+		ctrl.d_L1().onTrue(runOnce(()->enableNOS()));
+		ctrl.d_L1().onFalse(runOnce(()->disableNOS()));
 	}
 
 	public void setVehicleYawSupplier(DoubleSupplier newYawSupplier){ yaw = newYawSupplier; }
@@ -24,10 +27,14 @@ public class DriveControllerAdapter extends SubsystemBase{
 	public boolean    setFieldOriented (boolean newval) { isFieldOriented = newval; return isFieldOriented;}
 	public boolean    getFieldOriented ( ) { return isFieldOriented;}
 	public boolean toggleFieldOriented ( ) { isFieldOriented = !isFieldOriented; return isFieldOriented;}
+	
+	public boolean setNOS(boolean newval){ useNOS=newval; return newval;}
+	public boolean enableNOS(){ return setNOS(true);}
+	public boolean disableNOS(){ return setNOS(false);}
 
 	@Override
 	public void periodic(){
-		double x=-ctrl.d_leftX()*.7, y=-ctrl.d_leftY()*.7, r=-ctrl.d_rightX();
+		double x=-ctrl.d_leftX()*(useNOS ? 1 : .7), y=-ctrl.d_leftY()*(useNOS ? 1 : .7), r=-ctrl.d_rightX();
 		double a=yaw.getAsDouble(), db=OperatorConstants.DEADBAND;
 
 		x = x>db ? x-db : x<-db ? x+db : 0;

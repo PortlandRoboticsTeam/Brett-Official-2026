@@ -8,36 +8,36 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.3237738508564725,
-        "y": 5.67580143014773
+        "x": 2.0630602409638548,
+        "y": 6.06755421686747
       },
-      "isLocked": true,
+      "isLocked": false,
       "linkedName": "North Firing Position"
     },
     {
       "anchor": {
-        "x": 2.6422289156626504,
-        "y": 5.739722891566265
+        "x": 1.123277108433735,
+        "y": 7.029192771084338
       },
       "prevControl": {
-        "x": 2.867109690967316,
-        "y": 5.6305045922828
+        "x": 2.1395542168674697,
+        "y": 7.051048192771084
       },
       "nextControl": {
-        "x": 2.352026537045503,
-        "y": 5.880666065555417
+        "x": 0.729818746609483,
+        "y": 7.02073130093758
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 1.3219400855920111,
-        "y": 5.956390870185448
+        "x": 0.4457590361445781,
+        "y": 7.029192771084338
       },
       "prevControl": {
-        "x": 1.564385998139736,
-        "y": 5.89539923560413
+        "x": 0.6957590361445781,
+        "y": 7.029192771084338
       },
       "nextControl": null,
       "isLocked": false,
@@ -46,8 +46,8 @@
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 1.246473029045639,
-      "rotationDegrees": 180.0
+      "waypointRelativePos": 0.522821576763495,
+      "rotationDegrees": -90.0
     }
   ],
   "constraintZones": [],
@@ -62,8 +62,8 @@
     "unlimited": false
   },
   "goalEndState": {
-    "velocity": 0,
-    "rotation": -179.1319485502545
+    "velocity": 0.0,
+    "rotation": -90.0
   },
   "reversed": false,
   "folder": "North Ops",

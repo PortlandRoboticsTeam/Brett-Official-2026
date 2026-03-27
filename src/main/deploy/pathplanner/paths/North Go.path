@@ -3,16 +3,16 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.1230481927710843,
-        "y": 5.390036144578313
+        "x": 2.511096385542168,
+        "y": 5.510240963855422
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.724072289156626,
-        "y": 6.001987951807228
+        "x": 3.1121204819277097,
+        "y": 6.122192771084337
       },
       "isLocked": false,
-      "linkedName": "Center Firing Position"
+      "linkedName": "North Firing Position"
     },
     {
       "anchor": {
@@ -54,8 +54,8 @@
   "pointTowardsZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 4.0,
-    "maxAcceleration": 2.0,
+    "maxVelocity": 6.0,
+    "maxAcceleration": 3.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
     "nominalVoltage": 12.0,
@@ -69,7 +69,7 @@
   "folder": "North Ops",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -45.0
+    "rotation": -35.36883020754
   },
   "useDefaultConstraints": true
 }

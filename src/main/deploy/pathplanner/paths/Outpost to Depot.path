@@ -8,38 +8,49 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.1614730521264471,
-        "y": 0.9789137928861872
+        "x": 0.44211126961483566,
+        "y": 1.3513467785645557
       },
       "isLocked": true,
       "linkedName": "Outpost"
     },
     {
       "anchor": {
-        "x": 2.983876324068145,
-        "y": 2.5820633630589542
+        "x": 2.2794008559201138,
+        "y": 3.329843081312412
       },
       "prevControl": {
-        "x": 2.4630155821904665,
-        "y": 2.200151758536316
+        "x": 2.3052781740370896,
+        "y": 1.169087018544937
+      },
+      "nextControl": {
+        "x": 2.2693248017438936,
+        "y": 4.171193605026803
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 0.4550499286733236,
+        "y": 4.85660485021398
+      },
+      "prevControl": {
+        "x": 3.09453637660485,
+        "y": 5.2059486447931524
       },
       "nextControl": null,
       "isLocked": true,
-      "linkedName": "South Firing Position"
+      "linkedName": "Depot Begin"
     }
   ],
-  "rotationTargets": [
-    {
-      "waypointRelativePos": 0.7,
-      "rotationDegrees": 45.0
-    }
-  ],
+  "rotationTargets": [],
   "constraintZones": [],
   "pointTowardsZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 6.0,
-    "maxAcceleration": 3.0,
+    "maxVelocity": 1.0,
+    "maxAcceleration": 2.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
     "nominalVoltage": 12.0,
@@ -47,13 +58,13 @@
   },
   "goalEndState": {
     "velocity": 0.0,
-    "rotation": 41.60371433173959
+    "rotation": 90.0
   },
   "reversed": false,
-  "folder": "South Ops",
+  "folder": "Center",
   "idealStartingState": {
     "velocity": 0,
     "rotation": 90.0
   },
-  "useDefaultConstraints": true
+  "useDefaultConstraints": false
 }

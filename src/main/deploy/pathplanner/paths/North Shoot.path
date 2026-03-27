@@ -16,16 +16,16 @@
     },
     {
       "anchor": {
-        "x": 3.1230481927710843,
-        "y": 5.390036144578313
+        "x": 2.511096385542168,
+        "y": 5.510240963855422
       },
       "prevControl": {
-        "x": 3.5279975878251726,
-        "y": 5.689439928997436
+        "x": 2.9160457805962565,
+        "y": 5.809644748274544
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Center Firing Position"
+      "linkedName": "North Firing Position"
     }
   ],
   "rotationTargets": [],
@@ -33,8 +33,8 @@
   "pointTowardsZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 4.0,
-    "maxAcceleration": 2.0,
+    "maxVelocity": 6.0,
+    "maxAcceleration": 3.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
     "nominalVoltage": 12.0,
@@ -42,7 +42,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -45.0
+    "rotation": -35.36883020754
   },
   "reversed": false,
   "folder": "North Ops",
