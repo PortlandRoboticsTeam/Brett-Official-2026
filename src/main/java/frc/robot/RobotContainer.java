@@ -138,11 +138,11 @@ public class RobotContainer{
 		control.d_blink().onTrue	(Commands.runOnce(()->driveAdapter.toggleFieldOriented(), driveAdapter));
 		
 		// Intake Control
-		control.d_L2().onTrue		(Intake_Open ); // Open & Activate Intake
-		control.d_L2().onFalse		(Intake_Halt ); // Open & Disable Intake
-		control.h_povDown().onTrue	(Intake_Close); // Close & Disable Intake
-		control.h_povRight().onTrue	(Intake_Pulse); // Pulse Intake (as adjetator)
-		control.h_menu().onTrue		(Intake_Calibrate); // zero the intake via the limit switch
+		control.d_L2()		.or(control.h_L2()		).onTrue	(Intake_Open ); // Open & Activate Intake
+		control.d_L2()		.or(control.h_L2()		).onFalse	(Intake_Halt ); // Open & Disable Intake
+		control.d_povDown()	.or(control.h_povDown()	).onTrue	(Intake_Close); // Close & Disable Intake
+		control.d_povRight().or(control.h_povRight()).onTrue	(Intake_Pulse); // Pulse Intake (as adjetator)
+		control.d_menu()	.or(control.h_menu()	).onTrue	(Intake_Calibrate); // zero the intake via the limit switch
 
 		// Fire Control
 		control.h_R2().onTrue		(AutoYFH_Enable	); // Fire
