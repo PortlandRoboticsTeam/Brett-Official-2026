@@ -113,26 +113,46 @@ public class RobotContainer{
 				driveAdapter::getDriveY, driveAdapter::getDriveX, 
 				()->(driveAdapter.getDriveR() + mLemonLime.getVisualJoyStick()),
 			false));
-		control.d_LSB().and(control.d_RSB()).onTrue		(Commands.runOnce(()->{setMotorBrake(true); All_Stop.execute();}));
-		control.d_LSB().and(control.d_RSB()).onFalse	(Commands.runOnce(()-> setMotorBrake(false) ));
-		control.d_blink()					.onTrue		(Commands.runOnce(()->driveAdapter.toggleFieldOriented(), driveAdapter));
+		// control.d_LSB().and(control.d_RSB()).onTrue		(Commands.runOnce(()->{setMotorBrake(true); All_Stop.execute();}));
+		// control.d_LSB().and(control.d_RSB()).onFalse	(Commands.runOnce(()-> setMotorBrake(false) ));
+		// control.d_blink()					.onTrue		(Commands.runOnce(()->driveAdapter.toggleFieldOriented(), driveAdapter));
+		
+		// // Intake Control
+		// control.d_L2().onTrue		(Intake_Open ); // Open & Activate Intake
+		// control.d_L2().onFalse		(Intake_Halt ); // Open & Disable Intake
+		// control.d_povDown().onTrue	(Intake_Close); // Close & Disable Intake
+		// control.d_povRight().onTrue	(Intake_Pulse); // Pulse Intake (as adjetator)
+		// control.d_menu().onTrue		(Intake_Calibrate); // zero the intake via the limit switch
+
+		// // Fire Control
+		// control.d_R2().onTrue		(AutoYFH_Enable	); // Fire
+		// control.d_R2().onFalse		(AutoYFH_Disable); // Fire
+		// control.d_R1().onTrue		(FH_Downrange	); // Fire
+		// control.d_R1().onFalse		(FH_Stop		); // Stop Firing
+		// control.d_cross().onTrue	(Launcher_Backfeed); // Backfeed
+		// control.d_circle().onTrue	(Feeder_Forward_and_Pulse); // Backfeed
+
+		// control.d_circle().or(control.d_cross()).or(control.d_R2()).onFalse(Feeder_Stop);
+		
+		control.d_LSB().onTrue		(Commands.runOnce(drivebase::lock));
+		control.d_blink().onTrue	(Commands.runOnce(()->driveAdapter.toggleFieldOriented(), driveAdapter));
 		
 		// Intake Control
 		control.d_L2().onTrue		(Intake_Open ); // Open & Activate Intake
 		control.d_L2().onFalse		(Intake_Halt ); // Open & Disable Intake
-		control.d_povDown().onTrue	(Intake_Close); // Close & Disable Intake
-		control.d_povRight().onTrue	(Intake_Pulse); // Pulse Intake (as adjetator)
-		control.d_menu().onTrue		(Intake_Calibrate); // zero the intake via the limit switch
+		control.h_povDown().onTrue	(Intake_Close); // Close & Disable Intake
+		control.h_povRight().onTrue	(Intake_Pulse); // Pulse Intake (as adjetator)
+		control.h_menu().onTrue		(Intake_Calibrate); // zero the intake via the limit switch
 
 		// Fire Control
-		control.d_R2().onTrue		(AutoYFH_Enable	); // Fire
-		control.d_R2().onFalse		(AutoYFH_Disable); // Fire
-		control.d_R1().onTrue		(FH_Downrange	); // Fire
-		control.d_R1().onFalse		(FH_Stop		); // Stop Firing
-		control.d_cross().onTrue	(Launcher_Backfeed); // Backfeed
-		control.d_circle().onTrue	(Feeder_Forward_and_Pulse); // Backfeed
+		control.h_R2().onTrue		(AutoYFH_Enable	); // Fire
+		control.h_R2().onFalse		(AutoYFH_Disable); // Fire
+		control.h_R1().onTrue		(FH_Downrange	); // Fire
+		control.h_R1().onFalse		(FH_Stop		); // Stop Firing
+		control.h_cross().onTrue	(Launcher_Backfeed); // Backfeed
+		control.h_circle().onTrue	(Feeder_Forward_and_Pulse); // Backfeed
 
-		control.d_circle().or(control.d_cross()).or(control.d_R2()).onFalse(Feeder_Stop);
+		control.h_circle().or(control.h_cross()).onFalse(Feeder_Stop);
 	} 
 
 	public Command getAutonomousCommand() {

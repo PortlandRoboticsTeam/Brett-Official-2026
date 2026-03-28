@@ -13,6 +13,7 @@ public class AutomaticRanger extends SubsystemBase{
 	private final Shooter shooter;
 	private final Hood hood;
 	private final DoubleSupplier range;
+	private double shooterTargetRPM;
 	private boolean active = false;
 
 	private final double[] rpm = {
@@ -52,16 +53,26 @@ public class AutomaticRanger extends SubsystemBase{
 	@Override
 	public void periodic(){
 		if(active){ setAutomatic(); }
+		double[] b = shooter.getRPM();
+		double min = b[0];
+		if(min>b[1]) min=b[1];
+		if(min>b[2]) min=b[2];
+		SmartDashboard.putNumber("Flywheel Spin %", shooter.getDashboardTargetRPM()==0?0:min/shooter.getDashboardTargetRPM()*100);
 	}
 
 	private double lerp(double[] arr, double n){
-		if(n<0) n=0;
-		if(n>arr.length) n=arr.length;
+		if(n<0) return arr[0];
+		if(n>=arr.length) return arr[arr.length-1];
 		int nn = (int) n;
-		return arr[nn] * (nn-n+1) + arr[nn+1] * (n-nn);
+		try{
+			return arr[nn] * (nn-n+1) + arr[nn+1] * (n-nn);
+		}catch(Exception e){
+			return 0;
+		}
 	}
 
 	public void setRaw(double shooter_rpm, double hood_height){
+		shooterTargetRPM = shooter_rpm;
 		shooter.setRPM(shooter_rpm);
 		hood.setPosition(hood_height);
 		SmartDashboard.putNumber("FH Shooter RPM", shooter_rpm);
@@ -69,7 +80,7 @@ public class AutomaticRanger extends SubsystemBase{
 	}
 
 	public void setDisabled(){ setRaw(0, 0); }
-	public void setPassing(){ setRaw(3000, 1); }
+	public void setPassing(){ setRaw(3500, 1); }
 	public void setStatic(){ setRaw(3500, .19); }
 	public void setFromDashboard(){
 		setRaw(SmartDashboard.getNumber("Auto RPM", 3000),SmartDashboard.getNumber("Auto Height", .19));

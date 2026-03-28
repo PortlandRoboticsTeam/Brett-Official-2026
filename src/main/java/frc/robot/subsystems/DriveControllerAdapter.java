@@ -18,8 +18,8 @@ public class DriveControllerAdapter extends SubsystemBase{
 	public DriveControllerAdapter(ControllerHandler c){
 		super();
 		ctrl=c;
-		ctrl.d_L1().onTrue(runOnce(()->enableNOS()));
-		ctrl.d_L1().onFalse(runOnce(()->disableNOS()));
+		ctrl.d_R2().onTrue(runOnce(()->enableNOS()));
+		ctrl.d_R2().onFalse(runOnce(()->disableNOS()));
 	}
 
 	public void setVehicleYawSupplier(DoubleSupplier newYawSupplier){ yaw = newYawSupplier; }

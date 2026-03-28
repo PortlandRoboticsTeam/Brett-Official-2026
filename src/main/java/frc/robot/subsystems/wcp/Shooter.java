@@ -89,6 +89,13 @@ public class Shooter extends SubsystemBase {
         }
     }
 
+    public double[] getRPM(){
+        double[] out = {
+            (motors.get(0).getVelocity().getValueAsDouble()),
+            (motors.get(1).getVelocity().getValueAsDouble()),
+            (motors.get(2).getVelocity().getValueAsDouble())};
+        return out;
+    }
     public void setPercentOutput(double percentOutput) {
         for (final TalonFX motor : motors) {
             motor.setControl(
@@ -96,6 +103,10 @@ public class Shooter extends SubsystemBase {
                     .withOutput(Volts.of(percentOutput * 12.0))
             );
         }
+    }
+
+    public double getDashboardTargetRPM() {
+        return velocityRequest.getVelocityMeasure().in(RPM);
     }
 
     public void stop() {

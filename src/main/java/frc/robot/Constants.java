@@ -86,7 +86,7 @@ public final class Constants {
 				TURN_CONSTANT = 6;
 
 		public static final boolean DEFAULT_IS_FIELD_ORIENTED = false;
-		public static final boolean DEFAULT_ONE_HANDED = true;
+		public static final boolean DEFAULT_ONE_HANDED = false;
 
 		public static final double LINEAR_CONTROL_APPROACH_RATE = .2,
 				ANGULAR_CONTROL_APPROACH_RATE = .2;
